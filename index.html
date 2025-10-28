@@ -1,10 +1,91 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Test Page</title>
-  </head>
-  <body>
-    <h1>Hello, GitHub Pages!</h1>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Drakdodare</title>
+  <style>
+    /* === Reset & Base Styles === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(circle at top left, #1e1e2f, #0b0b13);
+      color: #f0f0f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    /* === Header === */
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glow 3s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #0072ff; }
+      to { text-shadow: 0 0 25px #00c6ff; }
+    }
+
+    /* === Subtext === */
+    p {
+      font-size: 1.2rem;
+      color: #ccc;
+      max-width: 600px;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    /* === Button === */
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.6rem;
+      font-size: 1rem;
+      color: #fff;
+      background: linear-gradient(90deg, #0072ff, #00c6ff);
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 198, 255, 0.5);
+    }
+
+    /* === Footer === */
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.9rem;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2.2rem; }
+      p { font-size: 1rem; padding: 0 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Drakdodare</h1>
+  <p>This is my GitHub Pages site — a space to showcase my projects, experiments, and ideas. Stay tuned for updates!</p>
+  <a href="https://github.com/drakdodare" class="btn" target="_blank">View My GitHub</a>
+
+  <footer>© 2025 Drakdodare • Built with 💙 using GitHub Pages</footer>
+</body>
 </html>
