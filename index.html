@@ -2,264 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Serie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome To My Homepage</title>
   <style>
-    :root{
-      --bg:#0d0f14;
-      --panel:#121620;
-      --panel-2:#1a1f2b;
-      --ink:#e6e7ea;
-      --muted:#9aa2b2;
-      --brand:#d73a3a;      /* crimson */
-      --brand-2:#ff6b6b;    /* glow */
-      --accent:#2bd8ff;     /* cyan highlights */
-      --good:#33d17a;
-      --bad:#ff6b6b;
-      --shadow: 0 10px 24px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.03);
-      --glow: 0 0 0 1px rgba(215,58,58,.6), 0 0 24px rgba(215,58,58,.35);
-      --radius: 16px;
+    /* === Reset & Base Styles === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-      color:var(--ink); background: radial-gradient(1200px 600px at 85% -10%, rgba(215,58,58,.15), transparent 60%),
-                         radial-gradient(900px 500px at -10% 110%, rgba(43,216,255,.12), transparent 60%), var(--bg);
-      letter-spacing:.2px;
+
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(circle at top left, #1e1e2f, #0b0b13);
+      color: #f0f0f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      overflow-x: hidden;
     }
-    .page{max-width:1200px; margin:32px auto; padding:0 16px}
-    .header{
-      display:grid; grid-template-columns: 120px 1fr auto; gap:16px; align-items:center;
-      margin-bottom:18px;
+
+    /* === Header === */
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glow 3s infinite alternate;
     }
-    .avatar-wrap{
-      position:relative; width:120px; height:120px; border-radius:50%;
-      background:linear-gradient(180deg,#22293a,#0b0e13);
-      box-shadow: var(--glow), var(--shadow);
-      overflow:hidden;
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #0072ff; }
+      to { text-shadow: 0 0 25px #00c6ff; }
     }
-    .avatar{width:100%; height:100%; object-fit:cover; display:block; filter:saturate(.9) contrast(1.05)}
-    .header h1{margin:0; font-size:28px; letter-spacing:.5px}
-    .header .sub{color:var(--muted)}
-    .hp{
-      display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius: var(--radius);
-      background:linear-gradient(180deg, #1a202d, #141925); box-shadow: var(--shadow);
-      border:1px solid rgba(255,255,255,.06);
+
+    /* === Subtext === */
+    p {
+      font-size: 1.2rem;
+      color: #ccc;
+      max-width: 600px;
+      line-height: 1.6;
+      margin-bottom: 2rem;
     }
-    .hp .pill{background: rgba(215,58,58,.15); color:#ffd8d8; padding:6px 10px; border:1px solid rgba(215,58,58,.45); border-radius:999px; font-weight:600}
-    .hp strong{font-size:20px}
 
-    /* layout */
-    .grid{display:grid; gap:16px; grid-template-columns: 320px 1fr}
-
-    .card{
-      background: linear-gradient(180deg, var(--panel), var(--panel-2));
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,.06);
-      box-shadow: var(--shadow);
-      position:relative;
+    /* === Button === */
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.6rem;
+      font-size: 1rem;
+      color: #fff;
+      background: linear-gradient(90deg, #0072ff, #00c6ff);
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .card h3{
-      margin:0; padding:14px 14px 10px; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.12em; color:#ffd0d0;
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 198, 255, 0.5);
     }
-    .card .body{padding:12px 14px 14px}
 
-    /* tags / chips */
-    .chip{display:inline-flex; align-items:center; gap:6px; padding:6px 8px; border-radius:999px; font-size:12px; color: #ffd0d0; border:1px solid rgba(215,58,58,.5); background: rgba(215,58,58,.12)}
-    .chip .dot{width:8px; height:8px; border-radius:50%; background: var(--brand-2); box-shadow:0 0 12px var(--brand-2)}
+    /* === Footer === */
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.9rem;
+      color: #777;
+    }
 
-    /* ability grid */
-    .abilities{display:grid; grid-template-columns: repeat(3, 1fr); gap:10px}
-    .ability{position:relative; padding:10px; border-radius:12px; background:#0f131b; border:1px solid rgba(255,255,255,.06); box-shadow: var(--shadow)}
-    .ability .abbr{font-weight:800; color:#ffb3b3; font-size:13px;}
-    .ability .score{font-size:28px; font-weight:800}
-    .ability .mod{position:absolute; right:8px; top:8px; font-weight:700; color:#ffd0d0; background: rgba(215,58,58,.18); border:1px solid rgba(215,58,58,.45); padding:2px 8px; border-radius:999px}
-
-    /* list tables */
-    .list{display:grid; grid-template-columns: 1fr auto; gap:6px; align-items:center}
-    .list div{padding:8px 10px; background:#0f131b; border:1px solid rgba(255,255,255,.06); border-radius:10px}
-    .list .muted{color:var(--muted)}
-
-    /* actions */
-    .actions{display:grid; grid-template-columns: 1fr 70px 70px 120px; gap:6px}
-    .actions div{padding:8px 10px; background:#0f131b; border:1px solid rgba(255,255,255,.06); border-radius:10px}
-    .actions .hdr{opacity:.8; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:#ffd0d0; background:transparent; border:none}
-
-    /* footer */
-    .footer{margin-top:16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; color:var(--muted)}
-    .btn{cursor:pointer; user-select:none; border:none; color:#fff; background:linear-gradient(180deg, #c73737, #9d2a2a); padding:10px 12px; border-radius:12px; box-shadow: var(--glow); font-weight:700}
-    .btn:active{transform:translateY(1px)}
-
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-      .header{grid-template-columns: 96px 1fr}
-      .avatar-wrap{width:96px; height:96px}
+    @media (max-width: 600px) {
+      h1 { font-size: 2.2rem; }
+      p { font-size: 1rem; padding: 0 1rem; }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <!-- Header -->
-    <div class="header">
-      <div class="avatar-wrap" id="avatarDrop">
-        <!-- Replace the src below with your image URL, or drop a file onto the circle. -->
-        <img id="avatar" class="avatar" alt="Profile" src=https://postimg.cc/jw75gdF7"" />
-      </div>
-      <div>
-        <h1>Serie <span class="sub">• Elf Sorcerer 20</span></h1>
-        <div class="footer" style="margin:6px 0 0">
-          <span class="chip"><span class="dot"></span> Charmed</span>
-          <span class="chip"><span class="dot"></span> Magical Sleep</span>
-          <span class="chip" style="border-color:rgba(43,216,255,.5); color:#c6f6ff; background:rgba(43,216,255,.12)"><span class="dot" style="background:var(--accent); box-shadow:0 0 12px var(--accent)"></span> Darkvision 60 ft.</span>
-        </div>
-      </div>
-      <div class="hp">
-        <span class="pill">HP</span>
-        <strong>147 / 147</strong>
-        <span class="sub" style="color:var(--muted)">AC 14 • Speed 30 ft • Prof +6</span>
-      </div>
-    </div>
+  <h1>Welcome To My Site</h1>
+  <p>This is website only exists so i can have "drakdodare.github.io" as my bluesky handle, thats it. Nothing will be posted here so you're wasting your time coming here.</p>
+  <a href="https://bsky.app/profile/drakdodare.github.io" class="btn" target="_blank">Follow My BlueSky</a>
 
-    <div class="grid">
-      <!-- LEFT COLUMN -->
-      <section class="card">
-        <h3>Abilities</h3>
-        <div class="body abilities">
-          <div class="ability"><div class="mod">−1</div><div class="abbr">STR</div><div class="score">9</div></div>
-          <div class="ability"><div class="mod">+3</div><div class="abbr">DEX</div><div class="score">16</div></div>
-          <div class="ability"><div class="mod">+2</div><div class="abbr">CON</div><div class="score">14</div></div>
-          <div class="ability"><div class="mod">+1</div><div class="abbr">INT</div><div class="score">13</div></div>
-          <div class="ability"><div class="mod">+0</div><div class="abbr">WIS</div><div class="score">10</div></div>
-          <div class="ability"><div class="mod">+3</div><div class="abbr">CHA</div><div class="score">16</div></div>
-        </div>
-      </section>
-
-      <!-- RIGHT COLUMN TOP: Actions -->
-      <section class="card">
-        <h3>Actions</h3>
-        <div class="body">
-          <div class="actions">
-            <div class="hdr">Name</div><div class="hdr">Hit/DC</div><div class="hdr">Range</div><div class="hdr">Damage / Notes</div>
-            <div>Spear</div><div>+5</div><div>20/60</div><div>1d6+1 • Versatile, Thrown</div>
-            <div>Fire Bolt</div><div>+9</div><div>120 ft</div><div>4d10 • V,S</div>
-            <div>Ray of Frost</div><div>+7</div><div>60 ft</div><div>4d8 • V,S</div>
-            <div>Unarmed Strike</div><div>+5</div><div>5 ft</div><div>1 • B</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- LEFT: Skills -->
-      <section class="card">
-        <h3>Skills</h3>
-        <div class="body list">
-          <div>Acrobatics</div><div class="muted">+1</div>
-          <div>Arcana</div><div class="muted">+7</div>
-          <div>Deception</div><div class="muted">+3</div>
-          <div>Investigation</div><div class="muted">+4</div>
-          <div>Perception</div><div class="muted">+6</div>
-          <div>Persuasion</div><div class="muted">+9</div>
-          <div>Stealth</div><div class="muted">+1</div>
-          <div>Survival</div><div class="muted">+0</div>
-        </div>
-      </section>
-
-      <!-- RIGHT: Traits -->
-      <section class="card">
-        <h3>Features & Traits</h3>
-        <div class="body">
-          <p style="margin-top:0;color:var(--muted)">Quick notes about features, class abilities, feats, and racial traits.</p>
-          <ul style="margin:0 0 10px 18px; color:#d0d6e2;"> 
-            <li><strong>Metamagic:</strong> Empowered, Quickened, Subtle.</li>
-            <li><strong>Darkvision:</strong> 60 ft (Elf).</li>
-            <li><strong>Fey Ancestry:</strong> Advantage vs. charm, immune to magical sleep.</li>
-          </ul>
-          <div class="footer">
-            <button class="btn" id="roll">Roll d20</button>
-            <span id="rollOut" aria-live="polite" class="sub">—</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- LEFT: Inventory -->
-      <section class="card">
-        <h3>Inventory</h3>
-        <div class="body list">
-          <div>Studded Leather</div><div class="muted">AC +12</div>
-          <div>Dagger</div><div class="muted">1d4 • F, L</div>
-          <div>Longbow</div><div class="muted">1d8 • P • 150/600</div>
-          <div>Component Pouch</div><div class="muted">—</div>
-        </div>
-      </section>
-
-      <!-- RIGHT: Notes -->
-      <section class="card">
-        <h3>Notes</h3>
-        <div class="body">
-          <textarea style="width:100%; min-height:120px; resize:vertical; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:#0f131b; color:var(--ink); padding:10px" placeholder="Session notes, NPC names, quest hooks…"></textarea>
-          <div class="footer"><span>Tip: drag & drop an image onto the avatar to set your portrait.</span></div>
-        </div>
-      </section>
-    </div>
-
-    <div class="footer" style="justify-content:space-between; margin-top:18px">
-      <div>Design: <span style="color:#ffd0d0">Crimson</span> UI • Single‑file HTML</div>
-      <div>
-        <label class="btn" for="file">Set Profile Image</label>
-        <input id="file" type="file" accept="image/*" style="display:none" />
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Default portrait (subtle placeholder gradient if user doesn't set one)
-    const avatar = document.getElementById('avatar');
-    avatar.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-        <defs>
-          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#2b3448"/>
-            <stop offset="1" stop-color="#0b0e13"/>
-          </linearGradient>
-        </defs>
-        <rect width="200" height="200" fill="url(#g)"/>
-        <circle cx="100" cy="76" r="40" fill="#1d2330"/>
-        <rect x="40" y="124" width="120" height="56" rx="28" fill="#1d2330"/>
-      </svg>`);
-
-    // File picker & drag‑drop to use your portrait
-    const file = document.getElementById('file');
-    const holder = document.getElementById('avatarDrop');
-
-    function setFromFile(f){
-      const img = new Image();
-      img.onload = () => { avatar.src = img.src; };
-      const reader = new FileReader();
-      reader.onload = e => { img.src = e.target.result };
-      reader.readAsDataURL(f);
-    }
-
-    file.addEventListener('change', e => {
-      const f = e.target.files && e.target.files[0];
-      if (f) setFromFile(f);
-    });
-
-    ;['dragenter','dragover'].forEach(ev=>holder.addEventListener(ev, e=>{e.preventDefault(); holder.style.boxShadow='0 0 0 2px rgba(43,216,255,.7), 0 0 24px rgba(43,216,255,.35)'}));
-    ;['dragleave','drop'].forEach(ev=>holder.addEventListener(ev, e=>{e.preventDefault(); holder.style.boxShadow='var(--glow), var(--shadow)'}));
-    holder.addEventListener('drop', e=>{
-      e.preventDefault();
-      const f = e.dataTransfer.files && e.dataTransfer.files[0];
-      if (f) setFromFile(f);
-    });
-
-    // Simple d20 roller
-    const rollBtn = document.getElementById('roll');
-    const out = document.getElementById('rollOut');
-    rollBtn.addEventListener('click', ()=>{
-      const n = Math.floor(Math.random()*20)+1;
-      out.textContent = `You rolled ${n}`;
-      out.style.color = n===20 ? '#8fffce' : (n===1 ? '#ffb3b3' : '#cbd5e1');
-    });
-  </script>
+  <footer>© 2025 Drakdodare • Built with ❤️ - Also Boskov if you are reading this, fuck you (͡ ͡° ͜ つ ͡͡°)</footer>
 </body>
 </html>
