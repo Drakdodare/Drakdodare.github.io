@@ -3,89 +3,179 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome To My Homepage</title>
+  <title>Freya — Character Profile</title>
   <style>
-    /* === Reset & Base Styles === */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* ========= THEME ========= */
+    :root {
+      --bg: #0b0c10;
+      --panel: #14161c;
+      --panel-2: #1a1e27;
+      --text: #e8ecf1;
+      --muted: #a9b1ba;
+      --line: #2b313d;
+      --gold: #ffd76a;
+      --gold-2: #e2b94a;
+      --accent: #66e0d8;
+      --danger: #ff6b6b;
+      --success: #8bd17c;
+      --warn: #ffcf66;
+      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+      --radius: 16px;
     }
 
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
-      font-family: 'Segoe UI', Roboto, sans-serif;
-      background: radial-gradient(circle at top left, #1e1e2f, #0b0b13);
-      color: #f0f0f5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      text-align: center;
-      overflow-x: hidden;
+      margin: 0; padding: 24px; color: var(--text); background: radial-gradient(1200px 600px at 10% -10%, #10131a 0%, var(--bg) 60%);
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     }
 
-    /* === Header === */
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      background: linear-gradient(90deg, #00c6ff, #0072ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: glow 3s infinite alternate;
+    /* ========= LAYOUT ========= */
+    .container { max-width: 1100px; margin: 0 auto; }
+    .card {
+      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: fadeInUp .6s ease both;
     }
 
-    @keyframes glow {
-      from { text-shadow: 0 0 10px #0072ff; }
-      to { text-shadow: 0 0 25px #00c6ff; }
+    .header { position: relative; padding: 28px 28px 18px; text-align: center; }
+    .title { font-size: clamp(26px, 4vw, 38px); letter-spacing: .5px; color: var(--gold); text-shadow: 0 0 12px rgba(255, 215, 106, .25); margin: 0; }
+    .subtitle { margin: 6px 0 0; color: var(--muted); font-style: italic; }
+
+    .grid {
+      display: grid; gap: 22px; padding: 0 22px 26px; grid-template-columns: 320px 1fr; align-items: start;
     }
 
-    /* === Subtext === */
-    p {
-      font-size: 1.2rem;
-      color: #ccc;
-      max-width: 600px;
-      line-height: 1.6;
-      margin-bottom: 2rem;
+    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; padding: 0 18px 22px; } }
+
+    /* ========= SIDEBAR ========= */
+    .sidebar { background: rgba(255,255,255,.02); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+    .portrait {
+      width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; border: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .portrait img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }
+    .badge { background: #0f131a; border: 1px solid var(--line); color: var(--muted); padding: 6px 10px; border-radius: 999px; font-size: 12px; }
+
+    .stat-block { margin-top: 14px; }
+    .stat-row { display: grid; grid-template-columns: 110px 1fr 52px; gap: 10px; align-items: center; margin: 8px 0; }
+    .stat-label { color: var(--muted); font-size: 12px; }
+    .bar { height: 8px; background: #0e1219; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+    .fill { height: 100%; background: linear-gradient(90deg, var(--accent), #4fb7f5); width: var(--v, 50%); }
+
+    .chip-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .chip { background: rgba(255, 215, 106, .07); border: 1px dashed var(--gold-2); color: var(--gold); padding: 6px 8px; border-radius: 8px; font-size: 12px; }
+
+    /* ========= MAIN ========= */
+    .section { background: rgba(255,255,255,.02); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+    .section + .section { margin-top: 18px; }
+    .sec-title { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; color: var(--gold); font-size: 18px; }
+    .kv { width: 100%; border-collapse: collapse; }
+    .kv td { padding: 8px 10px; border-top: 1px solid #0c1017; }
+    .kv td:first-child { width: 28%; color: var(--muted); }
+
+    ul.star { list-style: none; padding-left: 0; margin: 0; }
+    ul.star li { padding-left: 22px; position: relative; margin: 8px 0; }
+    ul.star li::before { content: "✦"; position: absolute; left: 0; color: var(--gold); }
+
+    .timeline { list-style: none; padding-left: 0; margin: 0; }
+    .timeline li { display: grid; grid-template-columns: 140px 1fr; gap: 14px; padding: 10px 0; border-top: 1px solid #0c1017; }
+    .timeline small { color: var(--muted); }
+
+    /* ========= ACCORDION ========= */
+    .accordion { border-top: 1px solid #0c1017; }
+    .acc-item { border-bottom: 1px solid #0c1017; }
+    .acc-btn { width: 100%; text-align: left; background: none; color: var(--text); border: 0; padding: 12px 6px; font-size: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    .acc-panel { max-height: 0; overflow: hidden; transition: max-height .35s ease; color: var(--muted); padding: 0 6px; }
+    .acc-item.open .acc-panel { max-height: 500px; padding-bottom: 12px; }
+
+    /* ========= TABLES ========= */
+    table.clean { width: 100%; border-collapse: collapse; }
+    table.clean th, table.clean td { padding: 10px; border-top: 1px solid #0c1017; text-align: left; }
+    table.clean th { color: var(--muted); font-weight: 600; }
+
+    /* ========= QUOTE ========= */
+    blockquote { margin: 0; padding: 14px 16px; border-left: 3px solid var(--gold-2); background: #10141c; color: #d8dee6; border-radius: 8px; }
+
+    /* ========= UTIL ========= */
+    .row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    @media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
+
+    .muted { color: var(--muted); }
+
+    /* ========= PRINT ========= */
+    @media print {
+      body { background: white; color: #111; padding: 0; }
+      .card, .section, .sidebar { box-shadow: none; background: white; border-color: #ddd; }
+      .title { color: #000; text-shadow: none; }
+      .sec-title { color: #000; }
+      .badge, .chip { border-color: #999; color: #222; }
     }
 
-    /* === Button === */
-    .btn {
-      display: inline-block;
-      padding: 0.8rem 1.6rem;
-      font-size: 1rem;
-      color: #fff;
-      background: linear-gradient(90deg, #0072ff, #00c6ff);
-      border: none;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(0, 198, 255, 0.5);
-    }
-
-    /* === Footer === */
-    footer {
-      position: absolute;
-      bottom: 10px;
-      font-size: 0.9rem;
-      color: #777;
-    }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 2.2rem; }
-      p { font-size: 1rem; padding: 0 1rem; }
-    }
+    /* ========= ANIMATIONS ========= */
+    @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 10px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
   </style>
 </head>
 <body>
-  <h1>Welcome To My Site</h1>
-  <p>This is website only exists so i can have "drakdodare.github.io" as my bluesky handle, thats it. Nothing will be posted here so you're wasting your time coming here.</p>
-  <a href="https://bsky.app/profile/drakdodare.github.io" class="btn" target="_blank">Follow My BlueSky</a>
+  <div class="container">
+    <article class="card" role="article" aria-labelledby="freya-title">
+      <header class="header">
+        <h1 id="freya-title" class="title">👸 Freya</h1>
+        <p class="subtitle">Sixth Queen of the Elven Kingdom of Flandre — currently held in enemy lands</p>
+      </header>
 
-  <footer>© 2025 Drakdodare • Built with ❤️ - Also Boskov if you are reading this, fuck you (͡ ͡° ͜ つ ͡͡°)</footer>
+      <section class="grid">
+        <!-- ======== SIDEBAR ======== -->
+        <aside class="sidebar" aria-label="Profile summary">
+          <div class="portrait">
+            <img src="https://postimg.cc/s1KdFRCR" alt="Freya Portrait" />
+          </div>
+          <div class="badges" aria-label="Titles and tags">
+            <span class="badge">High Elf</span>
+            <span class="badge">Queen</span>
+            <span class="badge">Diplomat</span>
+            <span class="badge">Mage</span>
+          </div>
+
+          <div class="stat-block" aria-label="Attributes">
+            <div class="stat-row"><span class="stat-label">Intellect</span><div class="bar"><div class="fill" style="--v:92%"></div></div><span>92</span></div>
+            <div class="stat-row"><span class="stat-label">Wisdom</span><div class="bar"><div class="fill" style="--v:88%"></div></div><span>88</span></div>
+            <div class="stat-row"><span class="stat-label">Willpower</span><div class="bar"><div class="fill" style="--v:84%"></div></div><span>84</span></div>
+            <div class="stat-row"><span class="stat-label">Agility</span><div class="bar"><div class="fill" style="--v:72%"></div></div><span>72</span></div>
+            <div class="stat-row"><span class="stat-label">Resilience</span><div class="bar"><div class="fill" style="--v:69%"></div></div><span>69</span></div>
+          </div>
+
+          <div class="chip-list" aria-label="Languages">
+            <span class="chip">Elvish</span>
+            <span class="chip">Common</span>
+            <span class="chip">Druidic</span>
+          </div>
+        </aside>
+
+        <!-- ======== MAIN ======== -->
+        <!-- ... rest of your code remains unchanged ... -->
+      </section>
+    </article>
+  </div>
+
+  <script>
+    // Simple accordion behavior
+    document.querySelectorAll('.acc-item').forEach((item) => {
+      const btn = item.querySelector('.acc-btn');
+      btn.addEventListener('click', () => {
+        const open = item.classList.toggle('open');
+        btn.querySelector('span').textContent = open ? '－' : '＋';
+      });
+    });
+  </script>
 </body>
 </html>
