@@ -2,179 +2,263 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Freya — Character Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Serie — One‑Page Character Sheet</title>
   <style>
-    /* ========= THEME ========= */
-    :root {
-      --bg: #0b0c10;
-      --panel: #14161c;
-      --panel-2: #1a1e27;
-      --text: #e8ecf1;
-      --muted: #a9b1ba;
-      --line: #2b313d;
-      --gold: #ffd76a;
-      --gold-2: #e2b94a;
-      --accent: #66e0d8;
-      --danger: #ff6b6b;
-      --success: #8bd17c;
-      --warn: #ffcf66;
-      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    :root{
+      --bg:#0d0f14;
+      --panel:#121620;
+      --panel-2:#1a1f2b;
+      --ink:#e6e7ea;
+      --muted:#9aa2b2;
+      --brand:#d73a3a;      /* crimson */
+      --brand-2:#ff6b6b;    /* glow */
+      --accent:#2bd8ff;     /* cyan highlights */
+      --good:#33d17a;
+      --bad:#ff6b6b;
+      --shadow: 0 10px 24px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.03);
+      --glow: 0 0 0 1px rgba(215,58,58,.6), 0 0 24px rgba(215,58,58,.35);
       --radius: 16px;
     }
-
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0; padding: 24px; color: var(--text); background: radial-gradient(1200px 600px at 10% -10%, #10131a 0%, var(--bg) 60%);
-      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      color:var(--ink); background: radial-gradient(1200px 600px at 85% -10%, rgba(215,58,58,.15), transparent 60%),
+                         radial-gradient(900px 500px at -10% 110%, rgba(43,216,255,.12), transparent 60%), var(--bg);
+      letter-spacing:.2px;
     }
+    .page{max-width:1200px; margin:32px auto; padding:0 16px}
+    .header{
+      display:grid; grid-template-columns: 120px 1fr auto; gap:16px; align-items:center;
+      margin-bottom:18px;
+    }
+    .avatar-wrap{
+      position:relative; width:120px; height:120px; border-radius:50%;
+      background:linear-gradient(180deg,#22293a,#0b0e13);
+      box-shadow: var(--glow), var(--shadow);
+      overflow:hidden;
+    }
+    .avatar{width:100%; height:100%; object-fit:cover; display:block; filter:saturate(.9) contrast(1.05)}
+    .header h1{margin:0; font-size:28px; letter-spacing:.5px}
+    .header .sub{color:var(--muted)}
+    .hp{
+      display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius: var(--radius);
+      background:linear-gradient(180deg, #1a202d, #141925); box-shadow: var(--shadow);
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .hp .pill{background: rgba(215,58,58,.15); color:#ffd8d8; padding:6px 10px; border:1px solid rgba(215,58,58,.45); border-radius:999px; font-weight:600}
+    .hp strong{font-size:20px}
 
-    /* ========= LAYOUT ========= */
-    .container { max-width: 1100px; margin: 0 auto; }
-    .card {
-      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
-      border: 1px solid var(--line);
+    /* layout */
+    .grid{display:grid; gap:16px; grid-template-columns: 320px 1fr}
+
+    .card{
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
       border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.06);
       box-shadow: var(--shadow);
-      overflow: hidden;
-      animation: fadeInUp .6s ease both;
+      position:relative;
     }
-
-    .header { position: relative; padding: 28px 28px 18px; text-align: center; }
-    .title { font-size: clamp(26px, 4vw, 38px); letter-spacing: .5px; color: var(--gold); text-shadow: 0 0 12px rgba(255, 215, 106, .25); margin: 0; }
-    .subtitle { margin: 6px 0 0; color: var(--muted); font-style: italic; }
-
-    .grid {
-      display: grid; gap: 22px; padding: 0 22px 26px; grid-template-columns: 320px 1fr; align-items: start;
+    .card h3{
+      margin:0; padding:14px 14px 10px; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.12em; color:#ffd0d0;
     }
+    .card .body{padding:12px 14px 14px}
 
-    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; padding: 0 18px 22px; } }
+    /* tags / chips */
+    .chip{display:inline-flex; align-items:center; gap:6px; padding:6px 8px; border-radius:999px; font-size:12px; color: #ffd0d0; border:1px solid rgba(215,58,58,.5); background: rgba(215,58,58,.12)}
+    .chip .dot{width:8px; height:8px; border-radius:50%; background: var(--brand-2); box-shadow:0 0 12px var(--brand-2)}
 
-    /* ========= SIDEBAR ========= */
-    .sidebar { background: rgba(255,255,255,.02); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
-    .portrait {
-      width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; border: 1px solid var(--line);
-      overflow: hidden;
+    /* ability grid */
+    .abilities{display:grid; grid-template-columns: repeat(3, 1fr); gap:10px}
+    .ability{position:relative; padding:10px; border-radius:12px; background:#0f131b; border:1px solid rgba(255,255,255,.06); box-shadow: var(--shadow)}
+    .ability .abbr{font-weight:800; color:#ffb3b3; font-size:13px;}
+    .ability .score{font-size:28px; font-weight:800}
+    .ability .mod{position:absolute; right:8px; top:8px; font-weight:700; color:#ffd0d0; background: rgba(215,58,58,.18); border:1px solid rgba(215,58,58,.45); padding:2px 8px; border-radius:999px}
+
+    /* list tables */
+    .list{display:grid; grid-template-columns: 1fr auto; gap:6px; align-items:center}
+    .list div{padding:8px 10px; background:#0f131b; border:1px solid rgba(255,255,255,.06); border-radius:10px}
+    .list .muted{color:var(--muted)}
+
+    /* actions */
+    .actions{display:grid; grid-template-columns: 1fr 70px 70px 120px; gap:6px}
+    .actions div{padding:8px 10px; background:#0f131b; border:1px solid rgba(255,255,255,.06); border-radius:10px}
+    .actions .hdr{opacity:.8; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:#ffd0d0; background:transparent; border:none}
+
+    /* footer */
+    .footer{margin-top:16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; color:var(--muted)}
+    .btn{cursor:pointer; user-select:none; border:none; color:#fff; background:linear-gradient(180deg, #c73737, #9d2a2a); padding:10px 12px; border-radius:12px; box-shadow: var(--glow); font-weight:700}
+    .btn:active{transform:translateY(1px)}
+
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      .header{grid-template-columns: 96px 1fr}
+      .avatar-wrap{width:96px; height:96px}
     }
-    .portrait img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 12px;
-    }
-    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }
-    .badge { background: #0f131a; border: 1px solid var(--line); color: var(--muted); padding: 6px 10px; border-radius: 999px; font-size: 12px; }
-
-    .stat-block { margin-top: 14px; }
-    .stat-row { display: grid; grid-template-columns: 110px 1fr 52px; gap: 10px; align-items: center; margin: 8px 0; }
-    .stat-label { color: var(--muted); font-size: 12px; }
-    .bar { height: 8px; background: #0e1219; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
-    .fill { height: 100%; background: linear-gradient(90deg, var(--accent), #4fb7f5); width: var(--v, 50%); }
-
-    .chip-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .chip { background: rgba(255, 215, 106, .07); border: 1px dashed var(--gold-2); color: var(--gold); padding: 6px 8px; border-radius: 8px; font-size: 12px; }
-
-    /* ========= MAIN ========= */
-    .section { background: rgba(255,255,255,.02); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
-    .section + .section { margin-top: 18px; }
-    .sec-title { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; color: var(--gold); font-size: 18px; }
-    .kv { width: 100%; border-collapse: collapse; }
-    .kv td { padding: 8px 10px; border-top: 1px solid #0c1017; }
-    .kv td:first-child { width: 28%; color: var(--muted); }
-
-    ul.star { list-style: none; padding-left: 0; margin: 0; }
-    ul.star li { padding-left: 22px; position: relative; margin: 8px 0; }
-    ul.star li::before { content: "✦"; position: absolute; left: 0; color: var(--gold); }
-
-    .timeline { list-style: none; padding-left: 0; margin: 0; }
-    .timeline li { display: grid; grid-template-columns: 140px 1fr; gap: 14px; padding: 10px 0; border-top: 1px solid #0c1017; }
-    .timeline small { color: var(--muted); }
-
-    /* ========= ACCORDION ========= */
-    .accordion { border-top: 1px solid #0c1017; }
-    .acc-item { border-bottom: 1px solid #0c1017; }
-    .acc-btn { width: 100%; text-align: left; background: none; color: var(--text); border: 0; padding: 12px 6px; font-size: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-    .acc-panel { max-height: 0; overflow: hidden; transition: max-height .35s ease; color: var(--muted); padding: 0 6px; }
-    .acc-item.open .acc-panel { max-height: 500px; padding-bottom: 12px; }
-
-    /* ========= TABLES ========= */
-    table.clean { width: 100%; border-collapse: collapse; }
-    table.clean th, table.clean td { padding: 10px; border-top: 1px solid #0c1017; text-align: left; }
-    table.clean th { color: var(--muted); font-weight: 600; }
-
-    /* ========= QUOTE ========= */
-    blockquote { margin: 0; padding: 14px 16px; border-left: 3px solid var(--gold-2); background: #10141c; color: #d8dee6; border-radius: 8px; }
-
-    /* ========= UTIL ========= */
-    .row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    @media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
-
-    .muted { color: var(--muted); }
-
-    /* ========= PRINT ========= */
-    @media print {
-      body { background: white; color: #111; padding: 0; }
-      .card, .section, .sidebar { box-shadow: none; background: white; border-color: #ddd; }
-      .title { color: #000; text-shadow: none; }
-      .sec-title { color: #000; }
-      .badge, .chip { border-color: #999; color: #222; }
-    }
-
-    /* ========= ANIMATIONS ========= */
-    @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 10px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
   </style>
 </head>
 <body>
-  <div class="container">
-    <article class="card" role="article" aria-labelledby="freya-title">
-      <header class="header">
-        <h1 id="freya-title" class="title">👸 Freya</h1>
-        <p class="subtitle">Sixth Queen of the Elven Kingdom of Flandre — currently held in enemy lands</p>
-      </header>
+  <div class="page">
+    <!-- Header -->
+    <div class="header">
+      <div class="avatar-wrap" id="avatarDrop">
+        <!-- Replace the src below with your image URL, or drop a file onto the circle. -->
+        <img id="avatar" class="avatar" alt="Profile" src="" />
+      </div>
+      <div>
+        <h1>Serie <span class="sub">• Elf Sorcerer 20</span></h1>
+        <div class="footer" style="margin:6px 0 0">
+          <span class="chip"><span class="dot"></span> Charmed</span>
+          <span class="chip"><span class="dot"></span> Magical Sleep</span>
+          <span class="chip" style="border-color:rgba(43,216,255,.5); color:#c6f6ff; background:rgba(43,216,255,.12)"><span class="dot" style="background:var(--accent); box-shadow:0 0 12px var(--accent)"></span> Darkvision 60 ft.</span>
+        </div>
+      </div>
+      <div class="hp">
+        <span class="pill">HP</span>
+        <strong>147 / 147</strong>
+        <span class="sub" style="color:var(--muted)">AC 14 • Speed 30 ft • Prof +6</span>
+      </div>
+    </div>
 
-      <section class="grid">
-        <!-- ======== SIDEBAR ======== -->
-        <aside class="sidebar" aria-label="Profile summary">
-          <div class="portrait">
-            <img src="https://postimg.cc/s1KdFRCR" alt="Freya Portrait" />
-          </div>
-          <div class="badges" aria-label="Titles and tags">
-            <span class="badge">High Elf</span>
-            <span class="badge">Queen</span>
-            <span class="badge">Diplomat</span>
-            <span class="badge">Mage</span>
-          </div>
-
-          <div class="stat-block" aria-label="Attributes">
-            <div class="stat-row"><span class="stat-label">Intellect</span><div class="bar"><div class="fill" style="--v:92%"></div></div><span>92</span></div>
-            <div class="stat-row"><span class="stat-label">Wisdom</span><div class="bar"><div class="fill" style="--v:88%"></div></div><span>88</span></div>
-            <div class="stat-row"><span class="stat-label">Willpower</span><div class="bar"><div class="fill" style="--v:84%"></div></div><span>84</span></div>
-            <div class="stat-row"><span class="stat-label">Agility</span><div class="bar"><div class="fill" style="--v:72%"></div></div><span>72</span></div>
-            <div class="stat-row"><span class="stat-label">Resilience</span><div class="bar"><div class="fill" style="--v:69%"></div></div><span>69</span></div>
-          </div>
-
-          <div class="chip-list" aria-label="Languages">
-            <span class="chip">Elvish</span>
-            <span class="chip">Common</span>
-            <span class="chip">Druidic</span>
-          </div>
-        </aside>
-
-        <!-- ======== MAIN ======== -->
-        <!-- ... rest of your code remains unchanged ... -->
+    <div class="grid">
+      <!-- LEFT COLUMN -->
+      <section class="card">
+        <h3>Abilities</h3>
+        <div class="body abilities">
+          <div class="ability"><div class="mod">−1</div><div class="abbr">STR</div><div class="score">9</div></div>
+          <div class="ability"><div class="mod">+3</div><div class="abbr">DEX</div><div class="score">16</div></div>
+          <div class="ability"><div class="mod">+2</div><div class="abbr">CON</div><div class="score">14</div></div>
+          <div class="ability"><div class="mod">+1</div><div class="abbr">INT</div><div class="score">13</div></div>
+          <div class="ability"><div class="mod">+0</div><div class="abbr">WIS</div><div class="score">10</div></div>
+          <div class="ability"><div class="mod">+3</div><div class="abbr">CHA</div><div class="score">16</div></div>
+        </div>
       </section>
-    </article>
+
+      <!-- RIGHT COLUMN TOP: Actions -->
+      <section class="card">
+        <h3>Actions</h3>
+        <div class="body">
+          <div class="actions">
+            <div class="hdr">Name</div><div class="hdr">Hit/DC</div><div class="hdr">Range</div><div class="hdr">Damage / Notes</div>
+            <div>Spear</div><div>+5</div><div>20/60</div><div>1d6+1 • Versatile, Thrown</div>
+            <div>Fire Bolt</div><div>+9</div><div>120 ft</div><div>4d10 • V,S</div>
+            <div>Ray of Frost</div><div>+7</div><div>60 ft</div><div>4d8 • V,S</div>
+            <div>Unarmed Strike</div><div>+5</div><div>5 ft</div><div>1 • B</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEFT: Skills -->
+      <section class="card">
+        <h3>Skills</h3>
+        <div class="body list">
+          <div>Acrobatics</div><div class="muted">+1</div>
+          <div>Arcana</div><div class="muted">+7</div>
+          <div>Deception</div><div class="muted">+3</div>
+          <div>Investigation</div><div class="muted">+4</div>
+          <div>Perception</div><div class="muted">+6</div>
+          <div>Persuasion</div><div class="muted">+9</div>
+          <div>Stealth</div><div class="muted">+1</div>
+          <div>Survival</div><div class="muted">+0</div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Traits -->
+      <section class="card">
+        <h3>Features & Traits</h3>
+        <div class="body">
+          <p style="margin-top:0;color:var(--muted)">Quick notes about features, class abilities, feats, and racial traits.</p>
+          <ul style="margin:0 0 10px 18px; color:#d0d6e2;"> 
+            <li><strong>Metamagic:</strong> Empowered, Quickened, Subtle.</li>
+            <li><strong>Darkvision:</strong> 60 ft (Elf).</li>
+            <li><strong>Fey Ancestry:</strong> Advantage vs. charm, immune to magical sleep.</li>
+          </ul>
+          <div class="footer">
+            <button class="btn" id="roll">Roll d20</button>
+            <span id="rollOut" aria-live="polite" class="sub">—</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEFT: Inventory -->
+      <section class="card">
+        <h3>Inventory</h3>
+        <div class="body list">
+          <div>Studded Leather</div><div class="muted">AC +12</div>
+          <div>Dagger</div><div class="muted">1d4 • F, L</div>
+          <div>Longbow</div><div class="muted">1d8 • P • 150/600</div>
+          <div>Component Pouch</div><div class="muted">—</div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Notes -->
+      <section class="card">
+        <h3>Notes</h3>
+        <div class="body">
+          <textarea style="width:100%; min-height:120px; resize:vertical; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:#0f131b; color:var(--ink); padding:10px" placeholder="Session notes, NPC names, quest hooks…"></textarea>
+          <div class="footer"><span>Tip: drag & drop an image onto the avatar to set your portrait.</span></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer" style="justify-content:space-between; margin-top:18px">
+      <div>Design: <span style="color:#ffd0d0">Crimson</span> UI • Single‑file HTML</div>
+      <div>
+        <label class="btn" for="file">Set Profile Image</label>
+        <input id="file" type="file" accept="image/*" style="display:none" />
+      </div>
+    </div>
   </div>
 
   <script>
-    // Simple accordion behavior
-    document.querySelectorAll('.acc-item').forEach((item) => {
-      const btn = item.querySelector('.acc-btn');
-      btn.addEventListener('click', () => {
-        const open = item.classList.toggle('open');
-        btn.querySelector('span').textContent = open ? '－' : '＋';
-      });
+    // Default portrait (subtle placeholder gradient if user doesn't set one)
+    const avatar = document.getElementById('avatar');
+    avatar.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#2b3448"/>
+            <stop offset="1" stop-color="#0b0e13"/>
+          </linearGradient>
+        </defs>
+        <rect width="200" height="200" fill="url(#g)"/>
+        <circle cx="100" cy="76" r="40" fill="#1d2330"/>
+        <rect x="40" y="124" width="120" height="56" rx="28" fill="#1d2330"/>
+      </svg>`);
+
+    // File picker & drag‑drop to use your portrait
+    const file = document.getElementById('file');
+    const holder = document.getElementById('avatarDrop');
+
+    function setFromFile(f){
+      const img = new Image();
+      img.onload = () => { avatar.src = img.src; };
+      const reader = new FileReader();
+      reader.onload = e => { img.src = e.target.result };
+      reader.readAsDataURL(f);
+    }
+
+    file.addEventListener('change', e => {
+      const f = e.target.files && e.target.files[0];
+      if (f) setFromFile(f);
+    });
+
+    ;['dragenter','dragover'].forEach(ev=>holder.addEventListener(ev, e=>{e.preventDefault(); holder.style.boxShadow='0 0 0 2px rgba(43,216,255,.7), 0 0 24px rgba(43,216,255,.35)'}));
+    ;['dragleave','drop'].forEach(ev=>holder.addEventListener(ev, e=>{e.preventDefault(); holder.style.boxShadow='var(--glow), var(--shadow)'}));
+    holder.addEventListener('drop', e=>{
+      e.preventDefault();
+      const f = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) setFromFile(f);
+    });
+
+    // Simple d20 roller
+    const rollBtn = document.getElementById('roll');
+    const out = document.getElementById('rollOut');
+    rollBtn.addEventListener('click', ()=>{
+      const n = Math.floor(Math.random()*20)+1;
+      out.textContent = `You rolled ${n}`;
+      out.style.color = n===20 ? '#8fffce' : (n===1 ? '#ffb3b3' : '#cbd5e1');
     });
   </script>
 </body>
