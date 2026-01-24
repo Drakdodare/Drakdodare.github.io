@@ -6,5 +6,5 @@
 > [!WARNING]
 > This is a warning.
 
-> [!CAUTION]
-> This is a caution message.
+> [!NOTE]
+> This is a note.
