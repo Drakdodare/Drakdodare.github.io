@@ -1,14 +1,14 @@
 > [!NOTE]
 > Hello, as you may have noticed, this hasen't been updated in quite some time. This is sadly due to my lack of time and some personal issues. I do still plan on updating this in the future, but I can't give any ETA on when that will be. Thank you for your understanding!
 
-> [!CAUTION]
-> This is a note.
-
-> [!WARNING]
-> This is a warning.
-
 > [!TIP]
-> This is a warning.
+> Use the latest release tag for best results.
 
 > [!IMPORTANT]
-> This is a warning.
+> Breaking changes may be introduced without notice.
+
+> [!WARNING]
+> Do not use this in production environments.
+
+> [!CAUTION]
+> This project has not been updated recently.
