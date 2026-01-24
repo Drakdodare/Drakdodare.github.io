@@ -6,3 +6,9 @@
 
 > [!WARNING]
 > This is a warning.
+
+> [!TIP]
+> This is a warning.
+
+> [!IMPORTANT]
+> This is a warning.
