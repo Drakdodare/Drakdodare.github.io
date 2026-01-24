@@ -1,6 +1,4 @@
-# 🛡️ uBlock Origin Filters
+# macOS ISO Download Links
 
-![GitHub Repo Size](https://img.shields.io/github/repo-size/laniksj/ubo-filters)
-![GitHub Code Size in Bytes](https://img.shields.io/github/languages/code-size/laniksj/ubo-filters)
-![GitHub Last Commit](https://img.shields.io/github/last-commit/laniksj/ubo-filters)
-![GitHub Commit Activity](https://img.shields.io/github/commit-activity/m/laniksj/ubo-filters)
+> [!CAUTION]
+> Hello, as you may have noticed, this hasen't been updated in quite some time. This is sadly due to my lack of time and some personal issues. I do still plan on updating this in the future, but I can't give any ETA on when that will be. Thank you for your understanding!
