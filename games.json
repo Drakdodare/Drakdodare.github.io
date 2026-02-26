@@ -1,0 +1,42 @@
+[
+  {
+    "title": "Digger",
+    "file": "https://v8.js-dos.com/bundles/digger.jsdos"
+  },
+  {
+    "title": "DOOM (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/doom.jsdos"
+  },
+  {
+    "title": "Wolfenstein 3D (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/wolf3d.jsdos"
+  },
+  {
+    "title": "Duke Nukem 3D (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/duke3d.jsdos"
+  },
+  {
+    "title": "Quake (DOS)",
+    "file": "https://v8.js-dos.com/bundles/quake.jsdos"
+  },
+  {
+    "title": "Heretic (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/heretic.jsdos"
+  },
+  {
+    "title": "Hexen (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/hexen.jsdos"
+  },
+  {
+    "title": "Jazz Jackrabbit (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/jazz.jsdos"
+  },
+  {
+    "title": "Epic Pinball (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/epicpinball.jsdos"
+  },
+  {
+    "title": "One Must Fall 2097 (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/omf2097.jsdos"
+  }
+]
