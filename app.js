@@ -30,10 +30,10 @@ async function run(url) {
 }
 
 // Auto-run hosted Doom bundle
-run("./games/doom.jsdos");
+run("bundles/doom.jsdos");
 
 stopBtn.addEventListener("click", stop);
-restartBtn.addEventListener("click", () => run("./games/doom.jsdos"));
+restartBtn.addEventListener("click", () => run("bundles/doom.jsdos"));
 
 // Run local bundle (in-session only; doesn’t upload to GitHub)
 fileInput.addEventListener("change", async () => {
