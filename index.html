@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MS-DOS Player</title>
+  <title>MS‑DOS Player</title>
 
   <!-- js-dos v7 (hosted by js-dos.com) -->
   <link rel="stylesheet" href="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.css">
@@ -186,7 +186,7 @@
   <div class="app">
     <aside class="sidebar">
       <div class="brand">
-        <h1>MS-DOS Player</h1>
+        <h1>MS‑DOS Player</h1>
         <div class="hint">
           Click a title to launch a <code>.jsdos</code> bundle. Add your bundles under <code>/bundles</code> and edit the list in this file.
         </div>
@@ -228,17 +228,36 @@
     emulators.pathPrefix = "https://js-dos.com/v7/build/releases/latest/js-dos/";
 
     // ===== Configure your library here =====
-    // Put your .jsdos bundles in /bundles (or change the URLs below).
-    // URL params supported:
-    //   ?game=<id>  (loads that entry)
-    //   ?bundle=<urlEncodedUrlToJsDosBundle>
-    const GAMES = [
-      {
-        id: "example",
-        title: "Example bundle",
-        description: "Replace this with your own .jsdos bundle in /bundles.",
-        bundleUrl: "bundles/example.jsdos",
-      },
+// You already have a /bundles folder.
+// Add your .jsdos bundle filenames below.
+// NOTE: Browsers can't auto-list a folder on GitHub Pages, so you must list them here (or use a manifest JSON).
+//
+// This helper builds an absolute URL to your bundles so it works on both:
+//   - user.github.io (root site)
+//   - user.github.io/<repo>/ (project site)
+function bundle(fileName) {
+  return new URL(`bundles/${fileName}`, window.location.href).toString();
+}
+
+// URL params supported:
+//   ?game=<id>  (loads that entry)
+//   ?bundle=<urlEncodedUrlToJsDosBundle>
+const GAMES = [
+        {
+    id: "example",
+    title: "Example bundle",
+    description: "Replace with your own .jsdos bundles in /bundles",
+    bundleUrl: bundle("example.jsdos"),
+  },
+
+  // Add more like this:
+  // {
+  //   id: "doom",
+  //   title: "DOOM",
+  //   description: "DOOM (1993)",
+  //   bundleUrl: bundle("doom.jsdos"),
+  // },
+
     ];
 
     const elGames = document.getElementById("games");
@@ -374,3 +393,41 @@
       // For many browsers, fullscreen must be triggered by a user gesture.
       const el = mount;
       try {
+        if (document.fullscreenElement) {
+          await document.exitFullscreen();
+        } else {
+          await el.requestFullscreen();
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    async function copyLink() {
+      const u = new URL(location.href);
+      if (selected) {
+        u.searchParams.set("game", selected.id);
+        u.searchParams.delete("bundle");
+      }
+      try {
+        await navigator.clipboard.writeText(u.toString());
+        setStatus("Link copied to clipboard.");
+      } catch {
+        setStatus("Could not copy automatically. Copy from the address bar.");
+      }
+    }
+
+    // Wire up UI
+    btnStart.addEventListener("click", start);
+    btnStop.addEventListener("click", stop);
+    btnFullscreen.addEventListener("click", fullscreen);
+    btnCopyLink.addEventListener("click", copyLink);
+
+    // Initial state
+    selected = getDefaultSelection();
+    renderGameList();
+    setRunning(false);
+    if (selected) setStatus(`Selected: ${selected.title}`);
+  </script>
+</body>
+</html>
