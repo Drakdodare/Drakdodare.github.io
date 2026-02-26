@@ -1,1 +1,91 @@
+:root {
+  --bg: #0b0d10;
+  --panel: #11151b;
+  --text: #e8eef7;
+  --muted: #a9b4c2;
+  --line: #263041;
+}
 
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.topbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand { font-weight: 600; white-space: nowrap; }
+
+.controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+button, .fileBtn {
+  border: 1px solid var(--line);
+  background: #0f141c;
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button:hover, .fileBtn:hover { border-color: #3a4a66; }
+
+#bundleUrl {
+  width: min(520px, 55vw);
+  border: 1px solid var(--line);
+  background: #0f141c;
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 10px;
+  outline: none;
+}
+
+.fileBtn input {
+  display: none;
+}
+
+.main {
+  height: calc(100% - 56px);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 10px;
+  padding: 10px 12px;
+}
+
+.status {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.dos {
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: black;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 13px;
+}
+.hint code {
+  color: var(--text);
+}
