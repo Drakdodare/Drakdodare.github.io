@@ -1,1 +1,67 @@
+:root {
+.monitor-led {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: rgba(255,43,214,.85);
+  box-shadow: 0 0 12px rgba(255,43,214,.45);
+  animation: ledPulse 1.2s ease-in-out infinite;
+}
+@keyframes ledPulse {
+  0%, 100% { opacity: .55; }
+  50%      { opacity: 1; }
+}
 
+.crt {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  background: radial-gradient(900px 460px at 50% 50%, rgba(0,240,255,.05), transparent 60%),
+              linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.52));
+}
+.dos {
+  position: absolute;
+  inset: 0;
+  /* js-dos fills the container; give it room */
+  width: 100%;
+  height: 100%;
+}
+
+/* CRT overlays */
+.crt-overlay { position: absolute; inset: 0; pointer-events: none; }
+.scanlines {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,.04) 0px,
+      rgba(255,255,255,.04) 1px,
+      rgba(0,0,0,.03) 2px,
+      rgba(0,0,0,.03) 3px
+    );
+  mix-blend-mode: overlay;
+  opacity: .55;
+  animation: scanFlicker 2.6s linear infinite;
+}
+@keyframes scanFlicker {
+  0%, 100% { opacity: .52; }
+  50%      { opacity: .62; }
+}
+.vignette {
+  box-shadow:
+    inset 0 0 140px rgba(0,0,0,.58),
+    inset 0 0 40px rgba(0,0,0,.35);
+}
+.glare {
+  background: radial-gradient(700px 240px at 30% 18%, rgba(255,255,255,.08), transparent 55%);
+}
+
+.monitor-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: rgba(0,0,0,.28);
+  border-top: 1px solid rgba(255,43,214,.12);
+  color: rgba(233,247,255,.75);
+  font-size: 18px;
+}
+.sig { color: rgba(0,240,255,.7); }
