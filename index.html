@@ -243,22 +243,19 @@ function bundle(fileName) {
 //   ?game=<id>  (loads that entry)
 //   ?bundle=<urlEncodedUrlToJsDosBundle>
 const GAMES = [
-        {
-    id: "example",
-    title: "Example bundle",
-    description: "Replace with your own .jsdos bundles in /bundles",
-    bundleUrl: bundle("example.jsdos"),
+  {
+    id: "digdug",
+    title: "Dig Dug",
+    description: "Dig Dug (.jsdos bundle)",
+    bundleUrl: bundle("Dig Dug.jsdos"),
   },
-
-  // Add more like this:
-  // {
-  //   id: "doom",
-  //   title: "DOOM",
-  //   description: "DOOM (1993)",
-  //   bundleUrl: bundle("doom.jsdos"),
-  // },
-
-    ];
+  {
+    id: "doom",
+    title: "DOOM",
+    description: "DOOM (.jsdos bundle)",
+    bundleUrl: bundle("doom.jsdos"),
+  },
+];
 
     const elGames = document.getElementById("games");
     const elStatus = document.getElementById("status");
