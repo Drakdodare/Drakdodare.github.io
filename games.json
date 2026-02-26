@@ -1,5 +1,9 @@
 [
   {
+    "title": "Digger",
+    "file": "https://v8.js-dos.com/bundles/digger.jsdos"
+  },
+  {
     "title": "DOOM",
     "file": "https://v8.js-dos.com/bundles/doom.jsdos"
   },
@@ -7,8 +11,4 @@
     "title": "DOOM II",
     "file": "https://v8.js-dos.com/bundles/doom2.jsdos"
   }
-  {
-    "title": "Digger",
-    "file": "https://v8.js-dos.com/bundles/digger.jsdos"
-  },
 ]
