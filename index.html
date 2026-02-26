@@ -1,14 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Redirecting...</title>
-  <meta http-equiv="refresh" content="0; url=https://www.youtube.com/@Drakdodare">
-  <script>
-    window.location.href = "https://www.youtube.com/@Drakdodare";
-  </script>
-</head>
-<body>
-  <p>Redirecting to YouTube…</p>
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>drakdodare DOS</title>
+
+    <!-- js-dos (CDN) -->
+    <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css" />
+    <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+    <!-- per js-dos Getting Started -->
+    <!-- https://v8.js-dos.com/latest/js-dos.css -->
+    <!-- https://v8.js-dos.com/latest/js-dos.js -->
+    <!-- :contentReference[oaicite:1]{index=1} -->
+
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="brand">drakdodare • MS-DOS in browser</div>
+
+      <div class="controls">
+        <button id="btnDemo" type="button">Run demo</button>
+
+        <input
+          id="bundleUrl"
+          type="url"
+          placeholder="https://…/yourgame.jsdos  (or /dos/bundles/yourgame.jsdos)"
+          spellcheck="false"
+        />
+        <button id="btnRunUrl" type="button">Run URL</button>
+
+        <label class="fileBtn">
+          Upload .jsdos
+          <input id="bundleFile" type="file" accept=".jsdos,application/zip" />
+        </label>
+
+        <button id="btnStop" type="button">Stop</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="status" id="status">Idle.</div>
+      <div id="dos" class="dos"></div>
+
+      <div class="hint">
+        Tip: you can launch a bundle via query string:
+        <code>?bundle=URL_OR_PATH_TO.jsdos</code>
+      </div>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
 </html>
