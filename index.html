@@ -1,47 +1,127 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>drakdodare DOS Arcade</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,height=device-height,initial-scale=1,viewport-fit=cover"
+    />
+    <title>DOOM (MS-DOS in browser)</title>
 
-  <!-- js-dos v8 (CDN) -->
-  <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
-  <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
-  <!-- ^ official “Getting Started” uses these URLs -->
-  <!-- https://v8.js-dos.com/latest/js-dos.css / js-dos.js -->
-  <!-- :contentReference[oaicite:1]{index=1} -->
+    <!-- js-dos UI styles -->
+    <link
+      rel="stylesheet"
+      href="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.css"
+    />
 
-  <link rel="stylesheet" href="./style.css" />
-</head>
-<body>
-  <header class="topbar">
-    <div class="left">
-      <span class="brand">🖥️ drakdodare DOS Arcade</span>
-      <span id="status" class="status">Ready</span>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        overflow: hidden;
+      }
+      #jsdos {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Overlay: browsers often require a user gesture for audio + reliable keyboard focus */
+      #overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.65);
+        color: #fff;
+        font: 16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        cursor: pointer;
+        user-select: none;
+      }
+      #overlay.hidden {
+        display: none;
+      }
+      .panel {
+        max-width: 560px;
+        padding: 18px 22px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.75);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      }
+      .panel h1 {
+        margin: 0 0 8px;
+        font-size: 20px;
+      }
+      .panel p {
+        margin: 0 0 10px;
+        opacity: 0.9;
+      }
+      .panel ul {
+        margin: 0;
+        padding-left: 18px;
+        opacity: 0.85;
+      }
+      .panel code {
+        opacity: 0.95;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="jsdos"></div>
+
+    <div id="overlay" role="button" tabindex="0" aria-label="Focus emulator">
+      <div class="panel">
+        <h1>Click once to focus + enable audio</h1>
+        <p>
+          DOOM is loading automatically. This click just gives the emulator keyboard focus and
+          allows sound in most browsers.
+        </p>
+        <ul>
+          <li><code>Alt</code> + <code>Enter</code>: fullscreen</li>
+          <li><code>Esc</code>: release mouse (if locked)</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="right">
-      <label class="label">Hosted:</label>
-      <select id="hostedSelect" class="select"></select>
-      <button id="playHosted" class="btn">Play</button>
+    <!-- js-dos runtime -->
+    <script src="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.js"></script>
 
-      <div class="divider"></div>
+    <script>
+      // Because we load js-dos from js-dos.com, tell it to load its WASM from there too.
+      emulators.pathPrefix = "https://js-dos.com/v7/build/releases/latest/js-dos/";
 
-      <label class="label">Upload from PC:</label>
-      <input id="fileInput" class="file" type="file" accept=".jsdos,.zip" />
+      const root = document.getElementById("jsdos");
 
-      <div class="divider"></div>
+      // Works for both user pages (drakdodare.github.io) and project pages (/repo/)
+      const bundleUrl = new URL("./bundles/doom.jsdos", window.location.href).toString();
 
-      <button id="fullscreen" class="btn">Fullscreen</button>
-      <button id="stop" class="btn danger">Stop</button>
-    </div>
-  </header>
+      // Start immediately
+      Dos(root)
+        .run(bundleUrl)
+        .catch((err) => {
+          console.error(err);
+          alert("Failed to start the DOOM bundle:\n\n" + (err?.message || err));
+        });
 
-  <main class="main">
-    <div id="dos" class="dos"></div>
-  </main>
-
-  <script src="./app.js"></script>
-</body>
+      // First user gesture: hide overlay + focus emulator (helps keyboard + audio policies)
+      const overlay = document.getElementById("overlay");
+      function unlock() {
+        overlay.classList.add("hidden");
+        // Give focus to the emulator UI
+        root.click();
+      }
+      overlay.addEventListener("click", unlock);
+      overlay.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          unlock();
+        }
+      });
+    </script>
+  </body>
 </html>
