@@ -1,21 +1,222 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Redirecting...</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DOS Emulator (js-dos)</title>
 
-    <!-- Instant redirect -->
-    <meta http-equiv="refresh" content="0; url=https://www.youtube.com/@Drakdodare" />
+  <!-- js-dos (pinned version) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/js-dos@8.3.20/dist/js-dos.css">
 
-    <!-- Fallback for browsers that ignore meta refresh -->
-    <script>
-      window.location.href = "https://www.youtube.com/@Drakdodare";
-    </script>
-  </head>
-  <body>
-    <p>
-      Redirecting to YouTube…  
-      <a href="https://www.youtube.com/@YourChannelName">Click here if not redirected</a>.
-    </p>
-  </body>
+  <style>
+    :root { color-scheme: dark; }
+    html, body { height: 100%; margin: 0; background:#0b0f14; color:#e6edf3; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    header {
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+      padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.02);
+    }
+    header strong { font-weight: 650; }
+    .spacer { flex: 1; }
+    .btn, input[type="file"]::file-selector-button {
+      appearance:none; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06);
+      color:#e6edf3; padding:8px 10px; border-radius:10px; cursor:pointer;
+    }
+    .btn:hover, input[type="file"]::file-selector-button:hover { background: rgba(255,255,255,.10); }
+    input[type="file"] { max-width: 340px; }
+    #status { opacity:.9; font-size: 13px; }
+    main { height: calc(100% - 62px); display:grid; grid-template-rows: auto 1fr; }
+    #dropzone{
+      margin: 12px 14px 0; padding: 12px; border: 1px dashed rgba(255,255,255,.18);
+      border-radius: 14px; background: rgba(255,255,255,.03);
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+    }
+    #dropzone.dragover { background: rgba(90,200,255,.10); border-color: rgba(90,200,255,.35); }
+    #help { font-size: 13px; line-height: 1.35; opacity: .92; }
+    #dos-wrap { padding: 12px 14px 14px; }
+    #dos {
+      width: 100%; height: 100%;
+      min-height: 520px;
+      border-radius: 16px; overflow:hidden;
+      background: #000;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+  </style>
+
+  <!-- Optional (only if you hit SharedArrayBuffer/crossOriginIsolated issues on GitHub Pages):
+       1) Download coi-serviceworker.js from gzuidhof/coi-serviceworker
+       2) Put it next to index.html
+       3) Uncomment the next line
+  -->
+  <!-- <script src="./coi-serviceworker.js"></script> -->
+</head>
+
+<body>
+  <header>
+    <strong>DOS Emulator</strong>
+    <input id="file" type="file" accept=".jsdos,.zip,.exe,.com,.bat" />
+    <button id="stop" class="btn" type="button">Stop</button>
+    <div class="spacer"></div>
+    <div id="status">Select a file to start.</div>
+  </header>
+
+  <main>
+    <div id="dropzone">
+      <div id="help">
+        Drop a <code>.jsdos</code> bundle (recommended), or a bundle <code>.zip</code>.<br>
+        For simple single-file programs you can also drop <code>.exe/.com/.bat</code>.
+      </div>
+      <button id="fullscreen" class="btn" type="button">Fullscreen</button>
+    </div>
+
+    <div id="dos-wrap">
+      <div id="dos"></div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-dos@8.3.20/dist/js-dos.js"></script>
+  <script>
+    // js-dos needs to know where its emulator assets (wasm/js) live:
+    const JSDOS_PATH_PREFIX = "https://cdn.jsdelivr.net/npm/js-dos@8.3.20/dist/";
+
+    const elFile = document.getElementById("file");
+    const elStop = document.getElementById("stop");
+    const elStatus = document.getElementById("status");
+    const elDos = document.getElementById("dos");
+    const elDrop = document.getElementById("dropzone");
+    const elFs = document.getElementById("fullscreen");
+
+    let player = null;          // DosProps returned by Dos(...)
+    let currentObjectUrl = null;
+
+    function setStatus(msg) {
+      elStatus.textContent = msg;
+    }
+
+    function cleanup() {
+      try { player?.stop?.(); } catch (_) {}
+      player = null;
+
+      if (currentObjectUrl) {
+        try { URL.revokeObjectURL(currentObjectUrl); } catch (_) {}
+        currentObjectUrl = null;
+      }
+
+      // wipe the container (js-dos injects DOM)
+      elDos.innerHTML = "";
+    }
+
+    function to83(name) {
+      // Create a DOS-ish 8.3 filename for safer launching (and uppercase it).
+      const parts = name.split(".");
+      const ext = (parts.length > 1 ? parts.pop() : "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+      const base = parts.join(".").toUpperCase().replace(/[^A-Z0-9]/g, "");
+      const base83 = (base || "PROG").slice(0, 8);
+      const ext3 = ext.slice(0, 3);
+      return ext3 ? `${base83}.${ext3}` : base83;
+    }
+
+    function startBundle(file) {
+      cleanup();
+      currentObjectUrl = URL.createObjectURL(file);
+
+      // Start js-dos with a bundle URL (blob URL is fine)
+      player = Dos(elDos, {
+        url: currentObjectUrl,
+        pathPrefix: JSDOS_PATH_PREFIX,
+        autoStart: true,
+        noNetworking: true,
+        noCloud: true,
+      });
+
+      setStatus(`Loaded bundle: ${file.name}`);
+    }
+
+    async function startSingleFile(file) {
+      cleanup();
+
+      const safeName = to83(file.name);
+      const bytes = new Uint8Array(await file.arrayBuffer());
+
+      // Put program into GAME/ and run it via autoexec.
+      const dosboxConf = `
+[autoexec]
+@echo off
+mount c .
+c:
+cd GAME
+${safeName}
+      `.trim();
+
+      player = Dos(elDos, {
+        pathPrefix: JSDOS_PATH_PREFIX,
+        autoStart: true,
+        noNetworking: true,
+        noCloud: true,
+        dosboxConf,
+        initFs: [
+          { path: `GAME/${safeName}`, contents: bytes },
+        ],
+      });
+
+      setStatus(`Loaded program: ${file.name} (as ${safeName})`);
+    }
+
+    function handleFile(file) {
+      if (!file) return;
+
+      const lower = file.name.toLowerCase();
+      if (lower.endsWith(".jsdos") || lower.endsWith(".zip")) {
+        // This will work if the file is a proper js-dos bundle zip.
+        startBundle(file);
+        return;
+      }
+
+      if (lower.endsWith(".exe") || lower.endsWith(".com") || lower.endsWith(".bat")) {
+        startSingleFile(file);
+        return;
+      }
+
+      setStatus("Unsupported file type. Use .jsdos/.zip (bundle) or .exe/.com/.bat (single file).");
+    }
+
+    // File picker
+    elFile.addEventListener("change", (e) => handleFile(e.target.files?.[0]));
+
+    // Drag & drop
+    ["dragenter","dragover"].forEach(ev => {
+      elDrop.addEventListener(ev, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        elDrop.classList.add("dragover");
+      });
+    });
+    ["dragleave","drop"].forEach(ev => {
+      elDrop.addEventListener(ev, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        elDrop.classList.remove("dragover");
+      });
+    });
+    elDrop.addEventListener("drop", (e) => {
+      const f = e.dataTransfer?.files?.[0];
+      handleFile(f);
+    });
+
+    // Stop
+    elStop.addEventListener("click", () => {
+      cleanup();
+      setStatus("Stopped.");
+    });
+
+    // Fullscreen
+    elFs.addEventListener("click", () => {
+      try { player?.setFullScreen?.(true); } catch (_) {}
+    });
+
+    // Cleanup on navigation away
+    window.addEventListener("beforeunload", cleanup);
+  </script>
+</body>
 </html>
