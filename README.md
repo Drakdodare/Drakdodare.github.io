@@ -8,7 +8,7 @@ The site UI is designed to be “drop-in-and-play”:
 - ✅ Or drop a **`.zip`** file
   - If the `.zip` is not already a js-dos bundle, the UI can list runnable files (e.g., `.EXE/.COM/.BAT`) so you can choose what to launch.
 
-> ⚠️ Legal note: only run software you own / have rights to distribute. Don’t upload or share copyrighted game archives you don’t have permission to use.
+> ⚠️ Only run software you own, Don’t upload or share copyrighted game archives you don’t have permission to use.
 
 ---
 
