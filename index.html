@@ -2,92 +2,375 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>drakdodare DOS Emulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MS-DOS Player</title>
 
-  <!-- js-dos (v8) -->
-  <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
-  <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+  <!-- js-dos v7 (hosted by js-dos.com) -->
+  <link rel="stylesheet" href="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.css">
+  <script src="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.js"></script>
 
   <style>
-    html, body { height: 100%; margin: 0; background: #0b0f14; color: #e7eef7; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    .bar {
-      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
-      padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
+    :root {
+      --bg: #0b0f0c;
+      --panel: #0f1712;
+      --border: #1f3b2a;
+      --text: #b6ffb6;
+      --muted: #7ddf9a;
+      --accent: #27c45a;
+      --danger: #ff5f5f;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
-    button, input {
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
-      color: inherit;
-      padding: 8px 10px;
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: radial-gradient(1200px 900px at 30% 20%, #0f1a12 0%, var(--bg) 55%, #060a07 100%);
+      color: var(--text);
+      font-family: var(--mono);
+    }
+
+    a { color: var(--accent); }
+
+    .app {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+    }
+
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(16, 26, 18, 0.85), rgba(11, 15, 12, 0.9));
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand h1 {
+      font-size: 16px;
+      margin: 0;
+      letter-spacing: 0.5px;
+    }
+
+    .brand .hint {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .games {
+      display: grid;
+      gap: 10px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .game {
+      border: 1px solid var(--border);
+      background: rgba(10, 14, 11, 0.65);
+      padding: 10px;
       border-radius: 10px;
-      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.06s ease, border-color 0.12s ease;
+      user-select: none;
     }
-    button { cursor: pointer; }
-    button:hover { background: rgba(255,255,255,.10); }
-    input[type="text"] { min-width: 260px; }
-    .hint { opacity: .75; font-size: 13px; }
-    #dos {
-      height: calc(100% - 64px);
-      width: 100%;
+
+    .game:hover { border-color: rgba(39, 196, 90, 0.85); transform: translateY(-1px); }
+    .game.active { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(39, 196, 90, 0.25) inset; }
+
+    .game .title { font-size: 13px; margin: 0 0 6px; }
+    .game .meta { font-size: 11px; color: var(--muted); line-height: 1.35; }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
     }
-    @media (max-width: 520px) {
-      #dos { height: calc(100% - 110px); }
-      input[type="text"] { min-width: 180px; }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: rgba(10, 14, 11, 0.75);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      cursor: pointer;
+      transition: border-color 0.12s ease, transform 0.06s ease;
     }
+    .btn:hover { border-color: rgba(39, 196, 90, 0.85); transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn.danger:hover { border-color: rgba(255, 95, 95, 0.85); }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10, 14, 11, 0.65);
+    }
+
+    .status {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .kbd {
+      font-size: 11px;
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(0,0,0,0.35);
+      color: var(--text);
+      margin-left: 6px;
+    }
+
+    #dos-container {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      padding: 14px;
+    }
+
+    /* The element js-dos attaches to */
+    #jsdos {
+      width: min(1200px, 100%);
+      height: min(760px, 100%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.55);
+      box-shadow: 0 12px 50px rgba(0,0,0,0.45);
+    }
+
+    .footer {
+      padding: 10px 16px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      background: rgba(10, 14, 11, 0.65);
+    }
+
+    .footer code { color: var(--text); }
   </style>
 </head>
-
 <body>
-  <div class="bar">
-    <button id="run-digger">Run sample (Digger)</button>
-    <button id="run-local">Run my bundle (./bundles/mygame.jsdos)</button>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>MS-DOS Player</h1>
+        <div class="hint">
+          Click a title to launch a <code>.jsdos</code> bundle. Add your bundles under <code>/bundles</code> and edit the list in this file.
+        </div>
+      </div>
 
-    <input id="bundle-url" type="text" placeholder="Paste a .jsdos URL (https://.../game.jsdos)" />
-    <button id="run-url">Run URL</button>
+      <div id="games" class="games" aria-label="Game list"></div>
 
-    <input id="bundle-file" type="file" accept=".jsdos" />
-    <span class="hint">Tip: start with the sample first.</span>
+      <div class="controls">
+        <button id="btnStart" class="btn" type="button">Start</button>
+        <button id="btnStop" class="btn danger" type="button" disabled>Stop</button>
+        <button id="btnFullscreen" class="btn" type="button" disabled>Fullscreen</button>
+        <button id="btnCopyLink" class="btn" type="button">Copy link</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div id="status" class="status">Ready. Select a game.</div>
+        <div class="status">
+          Controls: <span class="kbd">Esc</span> unlock mouse • <span class="kbd">Ctrl</span>+<span class="kbd">F11</span> (some bundles)
+        </div>
+      </div>
+
+      <div id="dos-container">
+        <div id="jsdos" aria-label="DOS emulator"></div>
+      </div>
+
+      <div class="footer">
+        Tip: For best compatibility, build bundles using DOS.Zone Game Studio (or any tool that produces a <code>.jsdos</code> zip containing <code>.jsdos/dosbox.conf</code>).
+      </div>
+    </main>
   </div>
 
-  <div id="dos"></div>
-
   <script>
-    const DOS_EL = document.getElementById("dos");
+    // IMPORTANT:
+    // js-dos loads its wasm/runtime files relative to this path.
+    // Because we're importing js-dos from js-dos.com, we point pathPrefix there too.
+    // If you self-host js-dos (recommended for long-term stability), set this to your local folder instead.
+    emulators.pathPrefix = "https://js-dos.com/v7/build/releases/latest/js-dos/";
 
-    function startBundle(url) {
-      if (!url) return;
+    // ===== Configure your library here =====
+    // Put your .jsdos bundles in /bundles (or change the URLs below).
+    // URL params supported:
+    //   ?game=<id>  (loads that entry)
+    //   ?bundle=<urlEncodedUrlToJsDosBundle>
+    const GAMES = [
+      {
+        id: "example",
+        title: "Example bundle",
+        description: "Replace this with your own .jsdos bundle in /bundles.",
+        bundleUrl: "bundles/example.jsdos",
+      },
+    ];
 
-      // reset the container so a new player can mount cleanly
-      DOS_EL.innerHTML = "";
+    const elGames = document.getElementById("games");
+    const elStatus = document.getElementById("status");
+    const btnStart = document.getElementById("btnStart");
+    const btnStop = document.getElementById("btnStop");
+    const btnFullscreen = document.getElementById("btnFullscreen");
+    const btnCopyLink = document.getElementById("btnCopyLink");
+    const mount = document.getElementById("jsdos");
 
-      // v8 "Getting Started" style: pass the bundle URL in options
-      Dos(DOS_EL, { url });
+    /** @type {{ id: string, title: string, description?: string, bundleUrl: string } | null} */
+    let selected = null;
+
+    /** @type {any} */
+    let ci = null; // command interface returned by Dos(...).run(...)
+
+    function setStatus(msg) {
+      elStatus.textContent = msg;
     }
 
-    document.getElementById("run-digger").addEventListener("click", () => {
-      startBundle("https://v8.js-dos.com/bundles/digger.jsdos");
-    });
+    function setRunning(running) {
+      btnStop.disabled = !running;
+      btnFullscreen.disabled = !running;
+      btnStart.disabled = running;
+    }
 
-    document.getElementById("run-local").addEventListener("click", () => {
-      startBundle("./bundles/mygame.jsdos");
-    });
+    function getDefaultSelection() {
+      const params = new URLSearchParams(location.search);
 
-    document.getElementById("run-url").addEventListener("click", () => {
-      const url = document.getElementById("bundle-url").value.trim();
-      startBundle(url);
-    });
+      const byId = params.get("game");
+      if (byId) {
+        const found = GAMES.find(g => g.id === byId);
+        if (found) return found;
+      }
 
-    document.getElementById("bundle-file").addEventListener("change", (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      const blobUrl = URL.createObjectURL(file);
-      startBundle(blobUrl);
-    });
+      const bundle = params.get("bundle");
+      if (bundle) {
+        return {
+          id: "custom",
+          title: "Custom bundle",
+          description: "Loaded via ?bundle=...",
+          bundleUrl: bundle,
+        };
+      }
 
-    // Auto-run the sample once so you instantly see it working:
-    startBundle("https://v8.js-dos.com/bundles/digger.jsdos");
-  </script>
-</body>
-</html>
+      return GAMES[0] ?? null;
+    }
+
+    function renderGameList() {
+      elGames.innerHTML = "";
+
+      for (const g of GAMES) {
+        const card = document.createElement("div");
+        card.className = "game" + (selected && selected.id === g.id ? " active" : "");
+        card.tabIndex = 0;
+        card.setAttribute("role", "button");
+        card.setAttribute("aria-label", `Select ${g.title}`);
+
+        const title = document.createElement("div");
+        title.className = "title";
+        title.textContent = g.title;
+
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        meta.textContent = g.description || g.bundleUrl;
+
+        card.appendChild(title);
+        card.appendChild(meta);
+
+        const selectThis = () => {
+          selected = g;
+          // Update URL for shareability
+          const u = new URL(location.href);
+          u.searchParams.set("game", g.id);
+          u.searchParams.delete("bundle");
+          history.replaceState({}, "", u);
+
+          renderGameList();
+          setStatus(`Selected: ${g.title}`);
+        };
+
+        card.addEventListener("click", selectThis);
+        card.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectThis();
+          }
+        });
+
+        elGames.appendChild(card);
+      }
+    }
+
+    async function stop() {
+      if (!ci) return;
+      try {
+        setStatus("Stopping...");
+        await ci.exit();
+      } catch (e) {
+        // exit() may throw if already stopped; ignore
+      } finally {
+        ci = null;
+        mount.innerHTML = ""; // clear player UI
+        setRunning(false);
+        setStatus("Stopped.");
+      }
+    }
+
+    async function start() {
+      if (!selected) {
+        setStatus("No game selected.");
+        return;
+      }
+
+      await stop();
+
+      setStatus(`Loading: ${selected.title} ...`);
+      setRunning(true);
+
+      try {
+        // Create a new player instance each run
+        const player = Dos(mount);
+        ci = await player.run(selected.bundleUrl);
+        setStatus(`Running: ${selected.title}`);
+      } catch (err) {
+        console.error(err);
+        setRunning(false);
+        setStatus("Failed to start. Check console + make sure the .jsdos file exists and is reachable.");
+      }
+    }
+
+    async function fullscreen() {
+      // For many browsers, fullscreen must be triggered by a user gesture.
+      const el = mount;
+      try {
