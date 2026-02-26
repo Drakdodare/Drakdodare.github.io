@@ -2,695 +2,399 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Drakdodare — Former Google Web Administrator • Azure DevOps • Full-Stack Developer • Security Researcher • Creator of Shibui Linux" />
-  <title>Drakdodare</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#0b1220" />
+
+  <title>drakdodare.github.io — Under Construction</title>
+  <meta name="description" content="This site is under construction. Check back soon." />
+
+  <!-- If you don't want search engines indexing the placeholder, keep this on.
+       Remove it when you're ready to go live. -->
+  <meta name="robots" content="noindex,nofollow" />
 
   <style>
     :root{
-      --bg0:#070a0f;
-      --bg1:#0b1020;
-      --card:#0d1426cc;
-      --line:#1a2747;
-      --text:#e9eefc;
-      --muted:#aab6d6;
-      --accent:#2aa9ff;
-      --accent2:#6cf0ff;
-      --good:#4ef0a7;
-      --warn:#ffcc66;
-      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --bg0:#070a12;
+      --bg1:#0b1220;
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.10);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.70);
+      --line:rgba(255,255,255,.12);
+      --accent:#7c5cff;
+      --accent2:#22d3ee;
+      --shadow: 0 20px 60px rgba(0,0,0,.55);
       --radius: 18px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
       color:var(--text);
-      font-family:var(--sans);
       background:
-        radial-gradient(1200px 700px at 70% -10%, rgba(42,169,255,.22), transparent 60%),
-        radial-gradient(900px 600px at 10% 20%, rgba(108,240,255,.14), transparent 55%),
-        radial-gradient(1000px 700px at 50% 120%, rgba(42,169,255,.10), transparent 55%),
+        radial-gradient(1200px 800px at 20% 15%, rgba(124,92,255,.25), transparent 55%),
+        radial-gradient(900px 700px at 80% 25%, rgba(34,211,238,.18), transparent 60%),
+        radial-gradient(900px 700px at 50% 90%, rgba(255,255,255,.06), transparent 60%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
-      overflow-x:hidden;
-    }
-
-    a{color:inherit; text-decoration:none}
-    a:hover{color:var(--accent2)}
-    .container{max-width:1100px; margin:0 auto; padding:0 22px}
-    .skip{
-      position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden;
-    }
-    .skip:focus{
-      left:20px; top:20px; width:auto; height:auto; padding:10px 12px;
-      background:#111a33; border:1px solid var(--line); border-radius:12px; z-index:9999;
-    }
-
-    /* Top nav */
-    .nav{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(180deg, rgba(7,10,15,.78), rgba(7,10,15,.40));
-      border-bottom:1px solid rgba(26,39,71,.6);
-    }
-    .nav-inner{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 0;
-      gap:16px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      font-weight:800; letter-spacing:.4px;
-    }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: radial-gradient(circle at 30% 30%, var(--accent2), var(--accent));
-      box-shadow:0 0 25px rgba(42,169,255,.45);
-    }
-    .brand span{font-size:14px; color:var(--muted); font-weight:600}
-    .brand strong{font-size:16px}
-    .links{
-      display:flex; gap:14px; flex-wrap:wrap; justify-content:flex-end;
-    }
-    .links a{
-      font-size:13px; color:var(--muted);
-      padding:8px 10px; border-radius:12px;
-      border:1px solid transparent;
-    }
-    .links a:hover{
-      border-color:rgba(42,169,255,.35);
-      background:rgba(13,20,38,.45);
-      color:var(--text);
-    }
-
-    /* Hero */
-    header.hero{
-      padding:52px 0 26px;
-    }
-    .hero-grid{
       display:grid;
-      grid-template-columns: 1.35fr .65fr;
+      place-items:center;
+      padding:24px;
+    }
+
+    .wrap{
+      width:min(980px, 100%);
+      display:grid;
       gap:18px;
-      align-items:stretch;
-    }
-    @media (max-width: 920px){
-      .hero-grid{grid-template-columns:1fr}
     }
 
-    .panel{
-      background:linear-gradient(180deg, rgba(13,20,38,.78), rgba(13,20,38,.45));
-      border:1px solid rgba(26,39,71,.7);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .panel-inner{padding:26px}
-
-    h1{
-      margin:0;
-      font-size:46px;
-      line-height:1.05;
-      letter-spacing:.2px;
-    }
-    @media (max-width: 520px){
-      h1{font-size:38px}
-    }
-    .subline{
-      margin-top:12px;
-      font-size:14px;
-      line-height:1.55;
-      color:var(--muted);
-    }
-
-    .role-row{
-      margin-top:18px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      font-size:12.5px;
-      border:1px solid rgba(26,39,71,.9);
-      background:rgba(7,10,15,.35);
-      color:var(--text);
-    }
-    .pill .mini{
-      width:7px; height:7px; border-radius:999px;
-      background:rgba(108,240,255,.9);
-      box-shadow:0 0 18px rgba(108,240,255,.35);
-    }
-
-    /* “Serious” typed line */
-    .typed-wrap{
-      margin-top:18px;
-      padding:16px 16px;
-      border-radius:14px;
-      border:1px solid rgba(26,39,71,.8);
-      background: rgba(7,10,15,.30);
-      font-family:var(--mono);
-      color:var(--accent2);
-      font-size:18px;
-      line-height:1.5;
-      display:flex;
-      align-items:center;
-      min-height:64px;
-    }
-    .typed{
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .caret{
-      width:10px;
-      height:22px;
-      margin-left:10px;
-      border-radius:4px;
-      background:rgba(42,169,255,.95);
-      box-shadow:0 0 22px rgba(42,169,255,.45);
-      animation: blink 1s steps(1,end) infinite;
-    }
-    @keyframes blink{50%{opacity:0}}
-
-    /* Sidebar card */
-    .stats{
-      display:flex;
-      flex-direction:column;
-      height:100%;
-    }
-    .stat{
-      padding:16px 18px;
-      border-bottom:1px solid rgba(26,39,71,.65);
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:14px;
-    }
-    .stat:last-child{border-bottom:none}
-    .stat h3{margin:0; font-size:12px; color:var(--muted); font-weight:650; letter-spacing:.3px}
-    .stat p{margin:4px 0 0; font-size:14px; line-height:1.35}
-    .tag{
-      font-family:var(--mono);
-      font-size:12px;
-      color:rgba(233,238,252,.9);
-      background:rgba(42,169,255,.10);
-      border:1px solid rgba(42,169,255,.25);
-      padding:6px 10px;
-      border-radius:999px;
-      white-space:nowrap;
-    }
-
-    /* Sections */
-    main{padding:10px 0 56px}
-    section{
-      margin-top:18px;
-    }
-    .section-title{
+    header{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
-      margin:0 0 10px;
-    }
-    .section-title h2{
-      margin:0;
-      font-size:18px;
-      letter-spacing:.2px;
-    }
-    .section-title span{
-      color:var(--muted);
-      font-size:12px;
-      font-family:var(--mono);
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
       gap:16px;
-    }
-    @media (max-width: 860px){
-      .grid{grid-template-columns:1fr}
+      padding:10px 6px;
     }
 
-    .card{
-      padding:18px;
-      border-radius: var(--radius);
-      border:1px solid rgba(26,39,71,.75);
-      background: linear-gradient(180deg, rgba(13,20,38,.72), rgba(13,20,38,.42));
-      box-shadow: 0 16px 46px rgba(0,0,0,.34);
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .badge{
+      width:40px;
+      height:40px;
+      border-radius:12px;
+      background:
+        radial-gradient(14px 14px at 30% 30%, rgba(255,255,255,.25), transparent 60%),
+        linear-gradient(135deg, rgba(124,92,255,.85), rgba(34,211,238,.75));
+      box-shadow: 0 10px 30px rgba(124,92,255,.25);
       position:relative;
       overflow:hidden;
     }
-    .card:before{
+    .badge::after{
       content:"";
       position:absolute;
-      inset:-1px;
-      background: radial-gradient(600px 240px at 20% 0%, rgba(42,169,255,.16), transparent 60%);
-      pointer-events:none;
+      inset:-40%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,.22), transparent);
+      transform: rotate(25deg);
+      animation: shine 3.8s ease-in-out infinite;
     }
-    .card > *{position:relative}
+    @keyframes shine{
+      0%{ transform:translateX(-40%) rotate(25deg); opacity:.2; }
+      45%{ opacity:.35; }
+      100%{ transform:translateX(40%) rotate(25deg); opacity:.2; }
+    }
 
-    .kicker{
-      font-family:var(--mono);
-      font-size:12px;
-      color:var(--accent2);
-      letter-spacing:.35px;
-      margin:0 0 8px;
-      opacity:.92;
-    }
-    .card h3{
-      margin:0 0 8px;
-      font-size:16px;
-    }
-    .card p{
+    .brand h1{
+      font-size:14px;
+      letter-spacing:.3px;
       margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.6;
-    }
-
-    .list{
-      margin:12px 0 0;
-      padding-left:18px;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.65;
-    }
-    .list li{margin:6px 0}
-
-    .badges{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:12px;
-    }
-    .badge{
-      font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(26,39,71,.8);
-      background:rgba(7,10,15,.25);
-      color:rgba(233,238,252,.92);
-      font-family:var(--mono);
-    }
-
-    /* Footer */
-    footer{
-      margin-top:22px;
-      padding-top:16px;
-      border-top:1px solid rgba(26,39,71,.6);
-      color:var(--muted);
-      font-size:12.5px;
-      display:flex;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-    .muted{color:var(--muted)}
-    .cta{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      margin-top:16px;
-      flex-wrap:wrap;
-    }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(42,169,255,.30);
-      background:rgba(42,169,255,.10);
-      color:var(--text);
-      font-size:13px;
-      font-weight:650;
-    }
-    .btn:hover{
-      border-color:rgba(108,240,255,.45);
-      background:rgba(108,240,255,.10);
-    }
-    .btn.secondary{
-      border-color:rgba(26,39,71,.9);
-      background:rgba(7,10,15,.25);
       color:var(--muted);
       font-weight:600;
     }
 
-    /* Subtle motion */
-    @media (prefers-reduced-motion: no-preference){
-      .panel, .card{
-        transform: translateY(0);
-        animation: floatIn .7s ease both;
-      }
-      @keyframes floatIn{
-        from{opacity:0; transform:translateY(10px)}
-        to{opacity:1; transform:translateY(0)}
-      }
+    .pill{
+      padding:8px 12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      backdrop-filter: blur(10px);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background: var(--accent2);
+      box-shadow: 0 0 0 6px rgba(34,211,238,.12);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{ transform:scale(1); opacity:.9; }
+      50%{ transform:scale(1.15); opacity:1; }
+    }
+
+    main{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+    }
+
+    @media (max-width: 860px){
+      main{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.03));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:22px;
+      backdrop-filter: blur(12px);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(600px 250px at 20% 0%, rgba(124,92,255,.18), transparent 55%),
+        radial-gradient(600px 250px at 80% 10%, rgba(34,211,238,.12), transparent 60%);
+      pointer-events:none;
+    }
+    .card > *{ position:relative; }
+
+    .title{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:10px;
+    }
+
+    h2{
+      margin:0;
+      font-size:34px;
+      line-height:1.05;
+      letter-spacing:-.6px;
+    }
+
+    .subtitle{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.6;
+      max-width: 60ch;
+    }
+
+    .spark{
+      width:54px;
+      height:54px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      display:grid;
+      place-items:center;
+    }
+
+    .spark svg{
+      width:28px;
+      height:28px;
+      fill:none;
+      stroke: rgba(255,255,255,.85);
+      stroke-width: 1.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .progress{
+      margin-top:18px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      border-radius: 999px;
+      height: 12px;
+      overflow:hidden;
+    }
+    .bar{
+      height:100%;
+      width: 35%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 999px;
+      animation: load 4s ease-in-out infinite;
+    }
+    @keyframes load{
+      0%{ width:18%; opacity:.75; }
+      50%{ width:62%; opacity:1; }
+      100%{ width:28%; opacity:.85; }
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    a.btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      text-decoration:none;
+      font-size:13px;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    a.btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.07);
+      border-color: rgba(255,255,255,.18);
+    }
+    a.btn.primary{
+      background: linear-gradient(135deg, rgba(124,92,255,.35), rgba(34,211,238,.20));
+      border-color: rgba(124,92,255,.45);
+    }
+
+    .side h3{
+      margin:0 0 10px;
+      font-size:14px;
+      color: rgba(255,255,255,.85);
+      letter-spacing:.2px;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    .item{
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .item .k{
+      min-width: 86px;
+      font-size:12px;
+      color: var(--muted);
+      padding-top:1px;
+    }
+    .item .v{
+      font-size:13px;
+      line-height:1.5;
+      color: rgba(255,255,255,.88);
+    }
+
+    footer{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+      padding: 10px 6px 0;
+      color: var(--muted);
+      font-size:12px;
+    }
+
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      color: rgba(255,255,255,.9);
+      background: rgba(0,0,0,.22);
+      padding: 2px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.10);
     }
   </style>
 </head>
 
 <body>
-  <a class="skip" href="#content">Skip to content</a>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="/" aria-label="Home">
+        <span class="badge" aria-hidden="true"></span>
+        <h1>drakdodare.github.io</h1>
+      </a>
 
-  <div class="nav">
-    <div class="container">
-      <div class="nav-inner">
-        <div class="brand" aria-label="Site brand">
-          <div class="dot" aria-hidden="true"></div>
+      <div class="pill" role="status" aria-live="polite">
+        <span class="dot" aria-hidden="true"></span>
+        Building in public
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <div class="title">
           <div>
-            <strong>Drakdodare</strong><br>
-            <span>Security • DevOps • Full-Stack • Linux</span>
+            <h2>Under construction</h2>
+            <p class="subtitle">
+              I’m putting this site together right now. Expect updates soon — in the meantime you can
+              check the repo or my GitHub profile.
+            </p>
+          </div>
+
+          <div class="spark" aria-hidden="true" title="Work in progress">
+            <!-- Wrench / tool icon (inline SVG) -->
+            <svg viewBox="0 0 24 24">
+              <path d="M21 7.5a5.5 5.5 0 0 1-7.8 5.02L7.7 18.02a2 2 0 1 1-2.82-2.83l5.5-5.5A5.5 5.5 0 0 1 16.5 2l-2.3 2.3 3.2 3.2L21 7.5Z"/>
+            </svg>
           </div>
         </div>
 
-        <nav class="links" aria-label="Primary">
-          <a href="#about">About</a>
-          <a href="#focus">Focus</a>
-          <a href="#shibui">Shibui Linux</a>
-          <a href="#security">Security</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </div>
-    </div>
+        <div class="progress" aria-label="Progress indicator">
+          <div class="bar"></div>
+        </div>
+
+        <div class="actions">
+          <!-- Replace these links if your username/repo differs -->
+          <a class="btn primary" href="https://github.com/drakdodare" target="_blank" rel="noreferrer">
+            Visit GitHub
+          </a>
+          <a class="btn" href="https://github.com/drakdodare/drakdodare.github.io" target="_blank" rel="noreferrer">
+            View Repository
+          </a>
+          <a class="btn" href="mailto:you@example.com">
+            Contact
+          </a>
+        </div>
+      </section>
+
+      <aside class="card side">
+        <h3>Status</h3>
+        <ul class="list">
+          <li class="item">
+            <div class="k">Now</div>
+            <div class="v">Designing layout, writing content, and wiring up pages.</div>
+          </li>
+          <li class="item">
+            <div class="k">Next</div>
+            <div class="v">Projects, blog, and a proper landing page.</div>
+          </li>
+          <li class="item">
+            <div class="k">Stack</div>
+            <div class="v"><code>GitHub Pages</code> + <code>HTML/CSS</code> (for now)</div>
+          </li>
+        </ul>
+      </aside>
+    </main>
+
+    <footer>
+      <div>© <span id="year"></span> drakdodare</div>
+      <div>Last updated: <span id="updated"></span></div>
+    </footer>
   </div>
 
-  <header class="hero">
-    <div class="container">
-      <div class="hero-grid">
-        <!-- Main hero -->
-        <div class="panel">
-          <div class="panel-inner">
-            <h1>Drakdodare</h1>
-
-            <div class="subline">
-              Former Google Web Administrator • Azure DevOps • Full-Stack Developer<br />
-              Security Researcher (Defensive + Authorized Offensive) • Creator of Shibui Linux
-            </div>
-
-            <div class="role-row" aria-label="Key roles">
-              <div class="pill"><span class="mini"></span>Former Google Web Administrator</div>
-              <div class="pill"><span class="mini"></span>Azure DevOps</div>
-              <div class="pill"><span class="mini"></span>Full-Stack Developer</div>
-              <div class="pill"><span class="mini"></span>Security Researcher</div>
-              <div class="pill"><span class="mini"></span>Shibui Linux Creator</div>
-            </div>
-
-            <div class="typed-wrap" aria-label="Rotating headline">
-              <div class="typed" id="typedText">Creator of Shibui Linux | Linux Customization | Automation Enjoyer</div>
-              <div class="caret" aria-hidden="true"></div>
-            </div>
-
-            <div class="cta">
-              <a class="btn" href="#contact" aria-label="Jump to contact">Get in touch</a>
-              <a class="btn secondary" href="#shibui" aria-label="Jump to Shibui Linux section">Explore Shibui Linux</a>
-              <a class="btn secondary" href="#security" aria-label="Jump to security section">Security approach</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sidebar quick facts -->
-        <aside class="panel stats" aria-label="Highlights">
-          <div class="stat">
-            <div>
-              <h3>Core domains</h3>
-              <p>DevOps systems • Full-stack delivery • Security research</p>
-            </div>
-            <div class="tag">ops+eng</div>
-          </div>
-
-          <div class="stat">
-            <div>
-              <h3>Linux work</h3>
-              <p>Customization, automation, and a curated distro vision via Shibui Linux</p>
-            </div>
-            <div class="tag">linux</div>
-          </div>
-
-          <div class="stat">
-            <div>
-              <h3>Security stance</h3>
-              <p>Defensive-first research with authorized offensive validation</p>
-            </div>
-            <div class="tag">sec</div>
-          </div>
-
-          <div class="stat">
-            <div>
-              <h3>What you can expect</h3>
-              <p>Clean delivery, repeatable automation, and pragmatic engineering decisions</p>
-            </div>
-            <div class="tag">delivery</div>
-          </div>
-        </aside>
-      </div>
-    </div>
-  </header>
-
-  <main id="content">
-    <div class="container">
-
-      <section id="about" aria-label="About">
-        <div class="section-title">
-          <h2>About</h2>
-          <span>// overview</span>
-        </div>
-
-        <div class="grid">
-          <div class="card">
-            <div class="kicker">PROFILE</div>
-            <h3>Engineering with an operator’s mindset</h3>
-            <p>
-              I work at the intersection of <strong>platform reliability</strong>, <strong>software delivery</strong>, and
-              <strong>security research</strong>—building systems that are easier to ship, safer to run, and simpler to maintain.
-              My background spans web administration, Azure DevOps practices, and full-stack development, grounded in Linux-first workflows.
-            </p>
-          </div>
-
-          <div class="card">
-            <div class="kicker">VALUES</div>
-            <h3>Automation, clarity, repeatability</h3>
-            <p>
-              My default approach is to make work <strong>repeatable</strong> (automation), <strong>auditable</strong> (clear pipelines + configs),
-              and <strong>resilient</strong> (defensive engineering + security validation). The end goal is consistent delivery without surprises.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="focus" aria-label="Focus areas">
-        <div class="section-title">
-          <h2>Focus areas</h2>
-          <span>// what I do</span>
-        </div>
-
-        <div class="grid">
-          <div class="card">
-            <div class="kicker">AZURE DEVOPS</div>
-            <h3>Pipeline-driven delivery</h3>
-            <p>
-              Designing delivery paths that are structured, maintainable, and built for iteration—so shipping becomes a routine, not an event.
-            </p>
-            <ul class="list">
-              <li>CI/CD as a product: predictable builds, repeatable releases</li>
-              <li>Automation-first workflows to reduce manual drift</li>
-              <li>Operational hygiene: clear ownership, clear rollbacks</li>
-            </ul>
-            <div class="badges" aria-label="DevOps keywords">
-              <span class="badge">Azure DevOps</span>
-              <span class="badge">CI/CD</span>
-              <span class="badge">Automation</span>
-              <span class="badge">Release Discipline</span>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="kicker">FULL-STACK ENGINEERING</div>
-            <h3>End-to-end execution</h3>
-            <p>
-              Full-stack development with an emphasis on maintainability, system boundaries, and clean handoffs between interface and backend.
-            </p>
-            <ul class="list">
-              <li>Pragmatic architecture: keep complexity proportional to need</li>
-              <li>Interfaces that serve users and operators (observability, stability)</li>
-              <li>Delivery-focused engineering: ship, measure, refine</li>
-            </ul>
-            <div class="badges" aria-label="Full-stack keywords">
-              <span class="badge">Full-Stack</span>
-              <span class="badge">Web Systems</span>
-              <span class="badge">Product Delivery</span>
-              <span class="badge">Maintainability</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="shibui" aria-label="Shibui Linux">
-        <div class="section-title">
-          <h2>Shibui Linux</h2>
-          <span>// linux + customization</span>
-        </div>
-
-        <div class="grid">
-          <div class="card">
-            <div class="kicker">DISTRO VISION</div>
-            <h3>Minimal UX, intentional defaults</h3>
-            <p>
-              Shibui Linux represents a practical, opinionated approach to Linux: a streamlined experience focused on usability,
-              customization, and a workflow that feels fast and deliberate.
-            </p>
-            <ul class="list">
-              <li>Customization as a first-class feature (not an afterthought)</li>
-              <li>“Less noise, more signal” in look-and-feel and workflow</li>
-              <li>Automation-friendly system habits for repeatability</li>
-            </ul>
-          </div>
-
-          <div class="card">
-            <div class="kicker">LINUX WORK</div>
-            <h3>Customization + automation</h3>
-            <p>
-              A Linux power-user approach: shaping the environment to match the work—then automating the rest.
-            </p>
-            <ul class="list">
-              <li>System personalization: consistent UX and cohesive theming</li>
-              <li>Automation scripts to remove friction from daily tasks</li>
-              <li>Performance-minded tweaks where they matter</li>
-            </ul>
-            <div class="badges" aria-label="Linux keywords">
-              <span class="badge">Linux Customization</span>
-              <span class="badge">Automation</span>
-              <span class="badge">Dotfiles</span>
-              <span class="badge">Minimal UX</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="security" aria-label="Security research">
-        <div class="section-title">
-          <h2>Security research</h2>
-          <span>// defensive + authorized offensive</span>
-        </div>
-
-        <div class="grid">
-          <div class="card">
-            <div class="kicker">DEFENSIVE FIRST</div>
-            <h3>Harden what you run</h3>
-            <p>
-              I prioritize defensive posture: reduce exposure, enforce sane defaults, and build systems that fail safely.
-              Security becomes a property of the system—not a last-minute patch.
-            </p>
-            <ul class="list">
-              <li>Threat-aware thinking: identify likely paths, reduce attack surface</li>
-              <li>Operational resilience: detection + response readiness</li>
-              <li>Secure-by-default habits: least privilege, explicit controls</li>
-            </ul>
-          </div>
-
-          <div class="card">
-            <div class="kicker">AUTHORIZED OFFENSIVE</div>
-            <h3>Validate with permission</h3>
-            <p>
-              When appropriate and authorized, I validate assumptions by testing for real-world failure modes—so remediation is grounded in reality.
-            </p>
-            <ul class="list">
-              <li>Authorized offensive testing to confirm defensive coverage</li>
-              <li>Actionable findings: prioritized, reproducible, fix-oriented</li>
-              <li>Documentation that helps teams learn (not just “pass”)</li>
-            </ul>
-            <div class="badges" aria-label="Security keywords">
-              <span class="badge">Security Research</span>
-              <span class="badge">Defensive</span>
-              <span class="badge">Authorized Offensive</span>
-              <span class="badge">Hardening</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="contact" aria-label="Contact">
-        <div class="section-title">
-          <h2>Contact</h2>
-          <span>// add your links</span>
-        </div>
-
-        <div class="card">
-          <div class="kicker">REACH OUT</div>
-          <h3>Links (edit these)</h3>
-          <p>
-            Replace the placeholders below with your actual profiles. If you want, tell me your GitHub/portfolio URL and I’ll wire them in cleanly.
-          </p>
-
-          <div class="badges" style="margin-top:14px">
-            <span class="badge">GitHub: <span class="muted">Drakdodare</span></span>
-          </div>
-        </div>
-
-        <footer>
-          <div>© <span id="2026"></span> Drakdodare</div>
-        </footer>
-      </section>
-
-    </div>
-  </main>
-
   <script>
-    // Footer year
-    document.getElementById("year").textContent = new Date().getFullYear();
+    // Tiny enhancements (no external dependencies)
+    const now = new Date();
+    document.getElementById("year").textContent = now.getFullYear();
 
-    // Minimal "serious" typing loop for the hero line
-    const lines = [
-      "Former Google Web Administrator | Azure DevOps | Full-Stack Developer",
-      "Security Researcher (Defensive + Authorized Offensive)",
-      "Creator of Shibui Linux | Linux Customization | Automation Enjoyer"
-    ];
-
-    const el = document.getElementById("typedText");
-    const typeSpeed = 28;
-    const eraseSpeed = 16;
-    const holdTime = 1100;
-
-    let lineIndex = 0;
-    let charIndex = 0;
-    let isErasing = false;
-
-    function tick(){
-      const current = lines[lineIndex];
-
-      if (!isErasing) {
-        charIndex++;
-        el.textContent = current.slice(0, charIndex);
-
-        if (charIndex >= current.length) {
-          isErasing = true;
-          setTimeout(tick, holdTime);
-          return;
-        }
-        setTimeout(tick, typeSpeed);
-      } else {
-        charIndex--;
-        el.textContent = current.slice(0, Math.max(0, charIndex));
-
-        if (charIndex <= 0) {
-          isErasing = false;
-          lineIndex = (lineIndex + 1) % lines.length;
-          setTimeout(tick, 220);
-          return;
-        }
-        setTimeout(tick, eraseSpeed);
-      }
-    }
-    // Start
-    setTimeout(tick, 500);
+    // Show a friendly "last updated" timestamp in the user's locale
+    const fmt = new Intl.DateTimeFormat(undefined, {
+      year: "numeric", month: "short", day: "2-digit",
+      hour: "2-digit", minute: "2-digit"
+    });
+    document.getElementById("updated").textContent = fmt.format(now);
   </script>
 </body>
 </html>
