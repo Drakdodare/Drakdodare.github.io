@@ -1,1 +1,5 @@
-
+[
+  { "title": "Commander Keen 1", "file": "games/keen1.jsdos" },
+  { "title": "Doom Shareware", "file": "games/doom.jsdos" },
+  { "title": "Wolfenstein 3D Shareware", "file": "games/wolf3d.jsdos" }
+]
