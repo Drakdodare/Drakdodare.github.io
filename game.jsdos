@@ -1,52 +1,42 @@
 [
-  { "title": "DOOM (Shareware)", "file": "games/doom_shareware.jsdos" },
-  { "title": "Wolfenstein 3D (Shareware)", "file": "games/wolf3d_shareware.jsdos" },
-  { "title": "Heretic (Shareware)", "file": "games/heretic_shareware.jsdos" },
-  { "title": "Hexen (Shareware)", "file": "games/hexen_shareware.jsdos" },
-  { "title": "Rise of the Triad (Shareware)", "file": "games/rott_shareware.jsdos" },
-  { "title": "Duke Nukem 3D (Shareware)", "file": "games/duke3d_shareware.jsdos" },
-  { "title": "Jazz Jackrabbit (Shareware)", "file": "games/jazz_shareware.jsdos" },
-  { "title": "Epic Pinball (Shareware)", "file": "games/epicpinball_shareware.jsdos" },
-  { "title": "One Must Fall 2097 (Shareware)", "file": "games/omf2097_shareware.jsdos" },
-  { "title": "Tyrian (Freeware)", "file": "games/tyrian.jsdos" },
-  { "title": "Alien Carnage (Halloween Harry)", "file": "games/aliencarnage.jsdos" },
-  { "title": "Hocus Pocus (Shareware)", "file": "games/hocuspocus_shareware.jsdos" },
-  { "title": "Bio Menace (Released Freeware)", "file": "games/biomenace.jsdos" },
-  { "title": "Major Stryker (Released Freeware)", "file": "games/majorstryker.jsdos" },
-  { "title": "Raptor: Call of the Shadows (Shareware)", "file": "games/raptor_shareware.jsdos" },
-  { "title": "SkyRoads", "file": "games/skyroads.jsdos" },
-  { "title": "The Elder Scrolls: Arena (Freeware)", "file": "games/arena.jsdos" },
-  { "title": "The Elder Scrolls II: Daggerfall (Freeware)", "file": "games/daggerfall.jsdos" },
-  { "title": "Beneath a Steel Sky (Freeware)", "file": "games/steel_sky.jsdos" },
-  { "title": "Lure of the Temptress (Freeware)", "file": "games/lure.jsdos" },
-  { "title": "Flight of the Amazon Queen (Freeware)", "file": "games/amazon_queen.jsdos" },
-  { "title": "Abuse (Open Source)", "file": "games/abuse.jsdos" },
-  { "title": "OpenTyrian", "file": "games/opentyrian.jsdos" },
-  { "title": "Freedoom", "file": "games/freedoom.jsdos" },
-  { "title": "NetHack (DOS)", "file": "games/nethack.jsdos" },
-  { "title": "GNU Chess (DOS)", "file": "games/gnuchess.jsdos" },
-  { "title": "FreeDink", "file": "games/freedink.jsdos" },
-  { "title": "Digger Remastered", "file": "games/digger.jsdos" },
-  { "title": "Zangband (DOS)", "file": "games/zangband.jsdos" },
-  { "title": "Cataclysm: Dark Days Ahead (DOS build)", "file": "games/cataclysm.jsdos" },
-  { "title": "FreeCiv (DOS build)", "file": "games/freeciv.jsdos" },
-  { "title": "LinCity (DOS build)", "file": "games/lincity.jsdos" },
-  { "title": "Super Mario War (DOS Port)", "file": "games/mariowar.jsdos" },
-  { "title": "DOSBox Demos Collection", "file": "games/demos.jsdos" },
-  { "title": "Scorched Earth (Shareware)", "file": "games/scorched_shareware.jsdos" },
-  { "title": "Zork I (Public Release)", "file": "games/zork1.jsdos" },
-  { "title": "Zork II (Public Release)", "file": "games/zork2.jsdos" },
-  { "title": "Zork III (Public Release)", "file": "games/zork3.jsdos" },
-  { "title": "Cave Story (Freeware DOS Port)", "file": "games/cavestory.jsdos" },
-  { "title": "Commander Keen Dreams (Released)", "file": "games/keen_dreams.jsdos" },
-  { "title": "Blake Stone (Shareware)", "file": "games/blakestone_shareware.jsdos" },
-  { "title": "Shadow Warrior (Shareware)", "file": "games/shadowwarrior_shareware.jsdos" },
-  { "title": "Alley Cat (Free Release)", "file": "games/alleycat.jsdos" },
-  { "title": "God of Thunder (Shareware)", "file": "games/godofthunder_shareware.jsdos" },
-  { "title": "Electro Man (Freeware)", "file": "games/electroman.jsdos" },
-  { "title": "Traffic Department 2192 (Freeware)", "file": "games/traffic2192.jsdos" },
-  { "title": "Doom Legacy Demo", "file": "games/doomlegacy.jsdos" },
-  { "title": "C-Dogs (Open Source)", "file": "games/cdogs.jsdos" },
-  { "title": "FreeCol (DOS build)", "file": "games/freecol.jsdos" },
-  { "title": "Liero (Freeware)", "file": "games/liero.jsdos" }
+  {
+    "title": "Digger",
+    "file": "https://v8.js-dos.com/bundles/digger.jsdos"
+  },
+  {
+    "title": "DOOM (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/doom.jsdos"
+  },
+  {
+    "title": "Wolfenstein 3D (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/wolf3d.jsdos"
+  },
+  {
+    "title": "Duke Nukem 3D (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/duke3d.jsdos"
+  },
+  {
+    "title": "Quake (DOS)",
+    "file": "https://v8.js-dos.com/bundles/quake.jsdos"
+  },
+  {
+    "title": "Heretic (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/heretic.jsdos"
+  },
+  {
+    "title": "Hexen (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/hexen.jsdos"
+  },
+  {
+    "title": "Jazz Jackrabbit (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/jazz.jsdos"
+  },
+  {
+    "title": "Epic Pinball (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/epicpinball.jsdos"
+  },
+  {
+    "title": "One Must Fall 2097 (Shareware)",
+    "file": "https://v8.js-dos.com/bundles/omf2097.jsdos"
+  }
 ]
