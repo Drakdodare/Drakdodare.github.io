@@ -3,32 +3,45 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DOOM (Shareware) - drakdodare</title>
-  <link rel="stylesheet" href="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.css" />
-  <style>
-    body { margin:0; font-family: system-ui, Arial; background:#0b0e14; color:#e5e7eb; }
-    header { display:flex; gap:12px; align-items:center; padding:10px 12px; border-bottom:1px solid #1f2937; }
-    #jsdos { height: calc(100vh - 52px); }
-    .btn { padding:8px 10px; border:1px solid #1f2937; background:#111827; color:#e5e7eb; border-radius:10px; cursor:pointer; }
-    .btn:disabled { opacity:.5; cursor:not-allowed; }
-    label.btn input { display:none; }
-    .muted { color:#9ca3af; font-size:12px; }
-  </style>
+  <title>drakdodare DOS Arcade</title>
+
+  <!-- js-dos v8 (CDN) -->
+  <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
+  <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+  <!-- ^ official “Getting Started” uses these URLs -->
+  <!-- https://v8.js-dos.com/latest/js-dos.css / js-dos.js -->
+  <!-- :contentReference[oaicite:1]{index=1} -->
+
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <header>
-    <button id="restart" class="btn">Restart DOOM</button>
-    <label class="btn">
-      Run local .jsdos…
-      <input id="file" type="file" accept=".jsdos,.zip,application/zip" />
-    </label>
-    <button id="stop" class="btn" disabled>Stop</button>
-    <div class="muted">Controls: arrows to move, Ctrl = fire, Space = use, Alt = strafe</div>
+  <header class="topbar">
+    <div class="left">
+      <span class="brand">🖥️ drakdodare DOS Arcade</span>
+      <span id="status" class="status">Ready</span>
+    </div>
+
+    <div class="right">
+      <label class="label">Hosted:</label>
+      <select id="hostedSelect" class="select"></select>
+      <button id="playHosted" class="btn">Play</button>
+
+      <div class="divider"></div>
+
+      <label class="label">Upload from PC:</label>
+      <input id="fileInput" class="file" type="file" accept=".jsdos,.zip" />
+
+      <div class="divider"></div>
+
+      <button id="fullscreen" class="btn">Fullscreen</button>
+      <button id="stop" class="btn danger">Stop</button>
+    </div>
   </header>
 
-  <div id="jsdos"></div>
+  <main class="main">
+    <div id="dos" class="dos"></div>
+  </main>
 
-  <script src="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>
