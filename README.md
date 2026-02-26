@@ -1,28 +1,21 @@
-name: Generate Snake
+# Drakdodare.github.io — Browser DOS Emulator (js-dos)
 
-on:
-  schedule:
-    - cron: "0 */6 * * *"
-  workflow_dispatch:
+A tiny, static GitHub Pages site that runs **DOS programs and games in the browser** using **js-dos**.
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: Platane/snk@v3
-        with:
-          github_user_name: drakdodare
-          outputs: |
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
-      - uses: actions/upload-artifact@v3
-        with:
-          name: github-snake
-          path: dist
+The site UI is designed to be “drop-in-and-play”:
 
-      - name: Push snake
-        uses: crazy-max/ghaction-github-pages@v4
-        with:
-          target_branch: output
-          build_dir: dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+- ✅ Drop a **`.jsdos` bundle** (recommended)
+- ✅ Or drop a **`.zip`** file
+  - If the `.zip` is not already a js-dos bundle, the UI can list runnable files (e.g., `.EXE/.COM/.BAT`) so you can choose what to launch.
+
+> ⚠️ Legal note: only run software you own / have rights to distribute. Don’t upload or share copyrighted game archives you don’t have permission to use.
+
+---
+
+## Live Site
+
+If GitHub Pages is enabled for this repo, the site should be available at:
+
+- https://drakdodare.github.io/
+
+(If you get a 404, see **Deployment / GitHub Pages** below.)
