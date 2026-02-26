@@ -1,208 +1,117 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-    />
-    <title>drakdodare DOS Arcade</title>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DOS Arcade</title>
 
-    <!-- js-dos (v8) -->
-    <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css" />
-    <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
-    <!-- CDN snippet is from js-dos docs -->
-    <!-- https://js-dos.com/dos-api.html -->
+<link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
+<script src="https://v8.js-dos.com/latest/js-dos.js"></script>
 
-    <style>
-      :root {
-        --bg: #0b0d10;
-        --panel: #121722;
-        --text: #e7eefc;
-        --muted: #9fb0cc;
-        --border: #25314a;
-        --btn: #1f2a3f;
-        --btnHover: #2a3752;
-      }
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        background: var(--bg);
-        color: var(--text);
-        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
-          Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      }
-      header {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        padding: 12px 14px;
-        background: var(--panel);
-        border-bottom: 1px solid var(--border);
-      }
-      header .title {
-        font-weight: 700;
-        letter-spacing: 0.2px;
-        margin-right: 8px;
-      }
-      select,
-      button {
-        background: var(--btn);
-        color: var(--text);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 10px 12px;
-        font-size: 14px;
-        outline: none;
-      }
-      button {
-        cursor: pointer;
-        user-select: none;
-      }
-      button:hover {
-        background: var(--btnHover);
-      }
-      button:disabled {
-        opacity: 0.55;
-        cursor: not-allowed;
-      }
-      .spacer {
-        flex: 1;
-      }
-      .hint {
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.2;
-      }
-      main {
-        height: calc(100% - 58px);
-      }
-      #player {
-        width: 100%;
-        height: 100%;
-      }
-      /* Optional: give the player a clean edge */
-      #player {
-        border-top: 1px solid #000;
-      }
-    </style>
-  </head>
+<style>
+body {
+  margin:0;
+  background:#0f1117;
+  color:white;
+  font-family:system-ui;
+  display:flex;
+  height:100vh;
+  overflow:hidden;
+}
 
-  <body>
-    <header>
-      <div class="title">DOS Arcade</div>
+#sidebar {
+  width:300px;
+  background:#161b22;
+  padding:10px;
+  overflow-y:auto;
+  border-right:1px solid #30363d;
+}
 
-      <select id="gameSelect" title="Choose a game"></select>
+#search {
+  width:100%;
+  padding:8px;
+  margin-bottom:10px;
+  background:#21262d;
+  border:1px solid #30363d;
+  color:white;
+  border-radius:6px;
+}
 
-      <button id="startBtn">Start</button>
-      <button id="stopBtn" disabled>Stop</button>
+.game {
+  padding:8px;
+  margin-bottom:6px;
+  background:#21262d;
+  border-radius:6px;
+  cursor:pointer;
+}
 
-      <div class="spacer"></div>
+.game:hover {
+  background:#30363d;
+}
 
-      <div class="hint">
-        Click inside the game to capture keyboard/mouse.<br />
-        Use the js-dos sidebar for fullscreen/settings.
-      </div>
-    </header>
+#player {
+  flex:1;
+}
 
-    <main>
-      <div id="player"></div>
-    </main>
+</style>
+</head>
 
-    <script>
-      const selectEl = document.getElementById("gameSelect");
-      const startBtn = document.getElementById("startBtn");
-      const stopBtn = document.getElementById("stopBtn");
-      const playerEl = document.getElementById("player");
+<body>
 
-      /** @type {any} js-dos player instance */
-      let dos = null;
+<div id="sidebar">
+  <input id="search" placeholder="Search games..." />
+  <div id="gameList"></div>
+</div>
 
-      function setUiState(running) {
-        stopBtn.disabled = !running;
-        startBtn.disabled = false;
-      }
+<div id="player"></div>
 
-      async function stopGame() {
-        if (!dos) return;
-        try {
-          // Player API: stop() frees resources; restart by making a new instance. :contentReference[oaicite:1]{index=1}
-          await dos.stop();
-        } catch (e) {
-          console.warn("stop() failed:", e);
-        } finally {
-          dos = null;
-          playerEl.innerHTML = "";
-          setUiState(false);
-        }
-      }
+<script>
 
-      async function startGame(bundleUrl) {
-        await stopGame();
+let dosInstance = null;
+let allGames = [];
 
-        // Clear container before creating a fresh instance
-        playerEl.innerHTML = "";
+async function loadGames() {
+  const res = await fetch("games.json");
+  allGames = await res.json();
+  renderGames(allGames);
+}
 
-        // Create player instance, point it at your .jsdos bundle
-        dos = Dos(playerEl, {
-          url: bundleUrl,
-          autoStart: true,
-          // Quality-of-life defaults:
-          renderAspect: "Fit",
-          imageRendering: "pixelated",
-          noCloud: true,
-          noNetworking: true,
-          // workerThread defaults to true; fine on GitHub Pages. :contentReference[oaicite:2]{index=2}
-        });
+function renderGames(games) {
+  const container = document.getElementById("gameList");
+  container.innerHTML = "";
 
-        setUiState(true);
-      }
+  games.forEach(g => {
+    const div = document.createElement("div");
+    div.className = "game";
+    div.textContent = g.title;
+    div.onclick = () => loadGame(g.file);
+    container.appendChild(div);
+  });
+}
 
-      function populateGames(games) {
-        selectEl.innerHTML = "";
-        for (const g of games) {
-          const opt = document.createElement("option");
-          opt.value = g.bundle;
-          opt.textContent = g.title;
-          selectEl.appendChild(opt);
-        }
-      }
+async function loadGame(file) {
+  if (dosInstance) {
+    await dosInstance.stop();
+    document.getElementById("player").innerHTML = "";
+  }
 
-      async function loadGamesList() {
-        try {
-          const res = await fetch("./games.json", { cache: "no-store" });
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const games = await res.json();
-          if (!Array.isArray(games) || games.length === 0)
-            throw new Error("games.json is empty/invalid");
-          populateGames(games);
-        } catch (e) {
-          console.warn("Failed to load games.json, using fallback:", e);
+  dosInstance = Dos(document.getElementById("player"), {
+    url: file,
+    autoStart: true,
+    renderAspect: "Fit"
+  });
+}
 
-          // Fallback uses a public demo bundle from js-dos (just so the page works immediately). :contentReference[oaicite:3]{index=3}
-          populateGames([
-            {
-              title: "Digger (demo bundle from js-dos CDN)",
-              bundle: "https://v8.js-dos.com/bundles/digger.jsdos",
-            },
-          ]);
-        }
-      }
+document.getElementById("search").addEventListener("input", e => {
+  const q = e.target.value.toLowerCase();
+  const filtered = allGames.filter(g => 
+    g.title.toLowerCase().includes(q)
+  );
+  renderGames(filtered);
+});
 
-      startBtn.addEventListener("click", async () => {
-        const bundleUrl = selectEl.value;
-        if (!bundleUrl) return;
+loadGames();
 
-        // Resolve relative bundle paths like "bundles/mygame.jsdos"
-        const resolved = new URL(bundleUrl, window.location.href).toString();
-        await startGame(resolved);
-      });
+</script>
 
-      stopBtn.addEventListener("click", stopGame);
-
-      loadGamesList();
-      setUiState(false);
-    </script>
-  </body>
+</body>
 </html>
