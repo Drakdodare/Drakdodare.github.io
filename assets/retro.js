@@ -9,8 +9,7 @@
       // You can also download/copy this bundle into /games and point to "./games/digger.jsdos"
       url: "https://v8.js-dos.com/bundles/digger.jsdos",
     },
-    { id: "keen1", name: "Commander Keen 1 (your bundle)", url: "./games/keen1.jsdos" },
-    { id: "doom1", name: "DOOM Shareware (your bundle)", url: "./games/doom1.jsdos" },
+    { id: "doom1", name: "DOOM Shareware (your bundle)", url: "https://js-dos.com/DOOM/" },
   ];
 
   // ---- DOM ----
