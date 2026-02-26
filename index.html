@@ -14,103 +14,71 @@ body {
   color:white;
   font-family:system-ui;
   display:flex;
+  flex-direction:column;
   height:100vh;
-  overflow:hidden;
 }
-
-#sidebar {
-  width:300px;
-  background:#161b22;
+header {
   padding:10px;
-  overflow-y:auto;
-  border-right:1px solid #30363d;
+  background:#161b22;
+  display:flex;
+  gap:10px;
+  align-items:center;
 }
-
-#search {
-  width:100%;
-  padding:8px;
-  margin-bottom:10px;
+select, button {
   background:#21262d;
-  border:1px solid #30363d;
   color:white;
-  border-radius:6px;
-}
-
-.game {
+  border:1px solid #30363d;
   padding:8px;
-  margin-bottom:6px;
-  background:#21262d;
   border-radius:6px;
-  cursor:pointer;
 }
-
-.game:hover {
-  background:#30363d;
-}
-
-#player {
-  flex:1;
-}
-
+#dos { flex:1; }
 </style>
 </head>
 
 <body>
 
-<div id="sidebar">
-  <input id="search" placeholder="Search games..." />
-  <div id="gameList"></div>
-</div>
+<header>
+  <strong>DOS Arcade</strong>
 
-<div id="player"></div>
+  <select id="gameSelect"></select>
+  <button onclick="loadGame()">Play</button>
+</header>
+
+<div id="dos"></div>
 
 <script>
-
 let dosInstance = null;
-let allGames = [];
 
 async function loadGames() {
   const res = await fetch("games.json");
-  allGames = await res.json();
-  renderGames(allGames);
-}
+  const games = await res.json();
 
-function renderGames(games) {
-  const container = document.getElementById("gameList");
-  container.innerHTML = "";
+  const select = document.getElementById("gameSelect");
 
   games.forEach(g => {
-    const div = document.createElement("div");
-    div.className = "game";
-    div.textContent = g.title;
-    div.onclick = () => loadGame(g.file);
-    container.appendChild(div);
+    const opt = document.createElement("option");
+    opt.value = g.file;
+    opt.textContent = g.title;
+    select.appendChild(opt);
   });
 }
 
-async function loadGame(file) {
+async function loadGame() {
   if (dosInstance) {
     await dosInstance.stop();
-    document.getElementById("player").innerHTML = "";
+    document.getElementById("dos").innerHTML = "";
   }
 
-  dosInstance = Dos(document.getElementById("player"), {
+  const file = document.getElementById("gameSelect").value;
+
+  dosInstance = Dos(document.getElementById("dos"), {
     url: file,
     autoStart: true,
     renderAspect: "Fit"
   });
 }
 
-document.getElementById("search").addEventListener("input", e => {
-  const q = e.target.value.toLowerCase();
-  const filtered = allGames.filter(g => 
-    g.title.toLowerCase().includes(q)
-  );
-  renderGames(filtered);
-});
-
 loadGames();
-
 </script>
 
 </body>
