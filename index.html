@@ -1,85 +1,204 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Ellie's Online Arcade</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ellie's Online Arcade</title>
 
-<link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
-<script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+  <!-- js-dos (DOSBox in the browser) -->
+  <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
+  <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+  <!-- Docs show this CDN + API shape -->
+  <!-- Dos(element, { url: "bundle.jsdos" }) -->
+  <!-- https://js-dos.com/dos-api.html -->
 
-<style>
-body {
-  margin:0;
-  background:#0f1117;
-  color:white;
-  font-family:system-ui;
-  display:flex;
-  flex-direction:column;
-  height:100vh;
-}
-header {
-  padding:10px;
-  background:#161b22;
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-select, button {
-  background:#21262d;
-  color:white;
-  border:1px solid #30363d;
-  padding:8px;
-  border-radius:6px;
-}
-#dos { flex:1; }
-</style>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body { display: flex; flex-direction: column; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    #topbar {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(0,0,0,.12);
+    }
+    #topbar .group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    #status { margin-left: auto; font-size: 12px; opacity: .8; max-width: 55vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    select, button, input[type="file"] { font-size: 14px; }
+    button { padding: 6px 10px; cursor: pointer; }
+    #dos-wrap { flex: 1; min-height: 0; }
+    #dos { width: 100%; height: 100%; }
+    .hint { font-size: 12px; opacity: .75; }
+  </style>
 </head>
 
 <body>
+  <div id="topbar">
+    <div class="group">
+      <strong>DOS</strong>
+      <select id="game">
+        <!-- "Digger" bundle is a safe test bundle hosted by js-dos -->
+        <option value="https://v8.js-dos.com/bundles/digger.jsdos">Digger (test bundle)</option>
 
-<header>
-  <strong>Ellie's Online Arcade</strong>
+        <!-- Add your own bundles under /bundles in this repo -->
+        <!-- Example: <option value="bundles/yourgame.jsdos">Your Game</option> -->
+      </select>
 
-  <select id="gameSelect"></select>
-  <button onclick="loadGame()">Play</button>
-</header>
+      <button id="play">Play</button>
+      <button id="stop">Stop</button>
+      <button id="fullscreen">Fullscreen</button>
+    </div>
 
-<div id="dos"></div>
+    <div class="group">
+      <label class="hint">
+        Test a local bundle:
+        <input id="file" type="file" accept=".jsdos,.zip" />
+      </label>
+    </div>
 
-<script>
-let dosInstance = null;
+    <div id="status">Idle</div>
+    <div class="hint" style="width:100%">
+      Tip: share links like <code>?bundle=bundles/yourgame.jsdos</code>
+    </div>
+  </div>
 
-async function loadGames() {
-  const res = await fetch("games.json");
-  const games = await res.json();
+  <div id="dos-wrap">
+    <div id="dos"></div>
+  </div>
 
-  const select = document.getElementById("gameSelect");
+  <script>
+    // js-dos "player props" lets us stop/restart, fullscreen, etc. :contentReference[oaicite:2]{index=2}
+    /** @type {any} */
+    let props = null;
 
-  games.forEach(g => {
-    const opt = document.createElement("option");
-    opt.value = g.file;
-    opt.textContent = g.title;
-    select.appendChild(opt);
-  });
-}
+    let currentObjectUrl = null;
+    let isFullscreen = false;
 
-async function loadGame() {
-  if (dosInstance) {
-    await dosInstance.stop();
-    document.getElementById("dos").innerHTML = "";
-  }
+    const $ = (id) => document.getElementById(id);
+    const statusEl = $("status");
+    const dosEl = $("dos");
+    const selectEl = $("game");
+    const fileEl = $("file");
 
-  const file = document.getElementById("gameSelect").value;
+    function setStatus(msg) {
+      statusEl.textContent = msg;
+    }
 
-  dosInstance = Dos(document.getElementById("dos"), {
-    url: file,
-    autoStart: true,
-    renderAspect: "Fit"
-  });
-}
+    async function stopIfRunning() {
+      if (props) {
+        try {
+          setStatus("Stopping…");
+          await props.stop(); // frees resources :contentReference[oaicite:3]{index=3}
+        } catch (e) {
+          console.warn(e);
+        }
+        props = null;
+      }
+      dosEl.innerHTML = "";
+      isFullscreen = false;
+    }
 
-loadGames();
-</script>
+    function onEvent(event, arg) {
+      // Events list: emu-ready, bnd-play, ci-ready, fullscreen-changed, ... :contentReference[oaicite:4]{index=4}
+      if (event === "emu-ready") setStatus("Emulator ready");
+      else if (event === "bnd-play") setStatus("Starting…");
+      else if (event === "ci-ready") setStatus("Running");
+      else if (event === "fullscreen-changed") {
+        isFullscreen = !!arg;
+        setStatus(isFullscreen ? "Running (fullscreen)" : "Running");
+      } else {
+        // other events: keep quiet unless debugging
+        // console.log("js-dos event:", event, arg);
+      }
+    }
 
+    async function start(url) {
+      // Clean up any prior blob URL
+      if (currentObjectUrl) {
+        URL.revokeObjectURL(currentObjectUrl);
+        currentObjectUrl = null;
+      }
+
+      await stopIfRunning();
+
+      setStatus("Loading bundle…");
+
+      // Create player
+      props = Dos(dosEl, {
+        url,
+        autoStart: true,
+        noNetworking: true,
+        noCloud: true,
+        onEvent
+      });
+
+      // Update address bar for shareable links
+      try {
+        const u = new URL(window.location.href);
+        u.searchParams.set("bundle", url);
+        history.replaceState(null, "", u.toString());
+      } catch (_) {}
+    }
+
+    $("play").addEventListener("click", async () => {
+      const url = selectEl.value.trim();
+      if (!url) return;
+      await start(url);
+    });
+
+    $("stop").addEventListener("click", async () => {
+      // Clear bundle param
+      try {
+        const u = new URL(window.location.href);
+        u.searchParams.delete("bundle");
+        history.replaceState(null, "", u.toString());
+      } catch (_) {}
+      await stopIfRunning();
+      setStatus("Stopped");
+    });
+
+    $("fullscreen").addEventListener("click", async () => {
+      if (!props) return;
+      isFullscreen = !isFullscreen;
+      props.setFullScreen(isFullscreen); // :contentReference[oaicite:5]{index=5}
+    });
+
+    fileEl.addEventListener("change", async () => {
+      const f = fileEl.files && fileEl.files[0];
+      if (!f) return;
+
+      // js-dos expects a URL; blob: URLs work well for local testing
+      const blobUrl = URL.createObjectURL(f);
+      currentObjectUrl = blobUrl;
+
+      // Put a temporary option in the dropdown
+      const label = `Local: ${f.name}`;
+      const opt = document.createElement("option");
+      opt.value = blobUrl;
+      opt.textContent = label;
+      selectEl.insertBefore(opt, selectEl.firstChild);
+      selectEl.value = blobUrl;
+
+      await start(blobUrl);
+    });
+
+    // Auto-start if someone shared a link with ?bundle=...
+    (async function bootFromQuery() {
+      const params = new URLSearchParams(window.location.search);
+      const bundle = params.get("bundle");
+      if (!bundle) return;
+
+      // Ensure it exists in the dropdown for visibility
+      const exists = Array.from(selectEl.options).some(o => o.value === bundle);
+      if (!exists) {
+        const opt = document.createElement("option");
+        opt.value = bundle;
+        opt.textContent = `Bundle: ${bundle}`;
+        selectEl.insertBefore(opt, selectEl.firstChild);
+      }
+      selectEl.value = bundle;
+
+      await start(bundle);
+    })();
+  </script>
 </body>
 </html>
