@@ -2,133 +2,56 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#0b1220" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>drakdodare DOS Arcade</title>
 
-    <title>drakdodare • MS-DOS</title>
-    <meta name="description" content="Run MS-DOS bundles (.jsdos) in your browser on GitHub Pages." />
-
-    <!-- js-dos (CDN) -->
-    <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css" />
-    <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
-
-    <link rel="stylesheet" href="./styles.css" />
-
-    <!-- Optional micro-polish for kbd + link chips (doesn't affect JS) -->
-    <style>
-      .chiplinks { display: inline-flex; gap: 8px; flex-wrap: wrap; }
-      .chiplinks a {
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 13px;
-        padding: 7px 10px;
-        border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.12);
-        background: rgba(255,255,255,0.06);
-        color: rgba(255,255,255,0.85);
-      }
-      .chiplinks a:hover { border-color: rgba(255,255,255,0.20); }
-      kbd {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-        font-size: 12px;
-        padding: 2px 7px;
-        border-radius: 8px;
-        border: 1px solid rgba(255,255,255,0.12);
-        background: rgba(0,0,0,0.25);
-        color: rgba(255,255,255,0.9);
-        vertical-align: middle;
-      }
-    </style>
+    <!-- js-dos player UI styles (v7) -->
+    <link rel="stylesheet" href="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.css" />
+    <link rel="stylesheet" href="./style.css" />
   </head>
-
   <body>
     <header class="topbar">
-      <div class="brand" aria-label="Site title">
-        drakdodare <span style="opacity:.65;font-weight:600;">•</span>
-        <span style="opacity:.88;font-weight:650;">MS-DOS Player</span>
+      <div class="brand">
+        <div class="brand__title">DOS Arcade</div>
+        <div class="brand__sub">drakdodare.github.io</div>
       </div>
 
-      <!-- Keep IDs the same so app.js works -->
-      <div class="controls" role="group" aria-label="Launcher controls">
-        <button id="btnDemo" type="button" title="Run the demo bundle">
-          Run demo
-        </button>
-
-        <input
-          id="bundleUrl"
-          type="url"
-          inputmode="url"
-          placeholder="Paste a .jsdos URL or site path (e.g. ./bundles/mygame.jsdos)"
-          spellcheck="false"
-          aria-label="Bundle URL or path"
-        />
-        <button id="btnRunUrl" type="button" title="Run the bundle from the URL/path">
-          Run URL
-        </button>
-
-        <label class="fileBtn" title="Choose a .jsdos bundle from your device">
-          Upload .jsdos
-          <input
-            id="bundleFile"
-            type="file"
-            accept=".jsdos,application/zip"
-            aria-label="Upload a .jsdos bundle"
-          />
+      <div class="actions">
+        <label class="filebtn">
+          <input id="fileInput" type="file" accept=".jsdos,.zip,application/zip" />
+          Run local bundle…
         </label>
 
-        <button id="btnStop" type="button" title="Stop and reset the emulator">
-          Stop
-        </button>
+        <button id="stopBtn" class="btn" disabled>Stop</button>
       </div>
     </header>
 
-    <main class="main">
-      <section aria-label="Status">
-        <div class="status" id="status">Idle.</div>
-      </section>
-
-      <section aria-label="Emulator screen">
-        <div id="dos" class="dos"></div>
-      </section>
-
-      <section class="hint" aria-label="Help and tips">
-        <div style="display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;">
-          <div>
-            <div style="font-weight:700;color:rgba(255,255,255,.88);margin-bottom:6px;">
-              Quick launch
-            </div>
-            <div style="color:rgba(255,255,255,.68);line-height:1.45;">
-              You can auto-run a bundle using a query string:
-              <code>?bundle=URL_OR_PATH_TO.jsdos</code>
-              <br />
-              Common controls: <kbd>Alt</kbd> + <kbd>Enter</kbd> (DOS fullscreen in many apps), and your browser’s fullscreen from the player UI.
-            </div>
-          </div>
-
-          <div class="chiplinks" aria-label="Helpful links">
-            <a href="./" title="Reload this page">Reload</a>
-            <a href="https://js-dos.com/dos-api.html" target="_blank" rel="noreferrer" title="js-dos docs">
-              js-dos docs
-            </a>
-            <a href="https://github.com/caiiiycuk/js-dos" target="_blank" rel="noreferrer" title="js-dos on GitHub">
-              js-dos GitHub
-            </a>
-          </div>
+    <main class="layout">
+      <aside class="sidebar">
+        <div class="sidebar__head">
+          <div class="sidebar__title">Games</div>
+          <div id="status" class="status">Loading manifest…</div>
         </div>
 
-        <details style="margin-top:10px;">
-          <summary style="cursor:pointer;color:rgba(255,255,255,.82);font-weight:650;">
-            Example
-          </summary>
-          <div style="margin-top:8px;color:rgba(255,255,255,.68);line-height:1.45;">
-            If you commit a bundle at <code>bundles/mygame.jsdos</code>, run:
-            <code>/dos/?bundle=./bundles/mygame.jsdos</code>
-          </div>
-        </details>
+        <div id="gameList" class="gamelist"></div>
+
+        <div class="hint">
+          <div class="hint__title">Tips</div>
+          <ul>
+            <li>Drop a <code>.jsdos</code> file anywhere to run it.</li>
+            <li>Hosted bundles live in <code>/games</code> and are listed in <code>manifest.json</code>.</li>
+          </ul>
+        </div>
+      </aside>
+
+      <section class="stage">
+        <!-- js-dos mounts into this div -->
+        <div id="jsdos" class="jsdos"></div>
       </section>
     </main>
 
+    <!-- js-dos library (v7) -->
+    <script src="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>
