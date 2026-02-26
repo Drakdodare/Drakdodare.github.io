@@ -18,21 +18,26 @@
     }
     header strong { font-weight: 650; }
     .spacer { flex: 1; }
-    .btn, input[type="file"]::file-selector-button {
+    .btn, input[type="file"]::file-selector-button, select {
       appearance:none; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06);
-      color:#e6edf3; padding:8px 10px; border-radius:10px; cursor:pointer;
+      color:#e6edf3; padding:8px 10px; border-radius:10px;
     }
+    .btn { cursor:pointer; }
     .btn:hover, input[type="file"]::file-selector-button:hover { background: rgba(255,255,255,.10); }
     input[type="file"] { max-width: 340px; }
+    select { max-width: 520px; width: min(520px, 100%); }
     #status { opacity:.9; font-size: 13px; }
     main { height: calc(100% - 62px); display:grid; grid-template-rows: auto 1fr; }
     #dropzone{
       margin: 12px 14px 0; padding: 12px; border: 1px dashed rgba(255,255,255,.18);
       border-radius: 14px; background: rgba(255,255,255,.03);
-      display:flex; gap:10px; align-items:center; justify-content:space-between;
+      display:flex; gap:12px; align-items:flex-start; justify-content:space-between;
+      flex-wrap: wrap;
     }
     #dropzone.dragover { background: rgba(90,200,255,.10); border-color: rgba(90,200,255,.35); }
     #help { font-size: 13px; line-height: 1.35; opacity: .92; }
+    #zip-ui { display:none; gap:10px; align-items:center; flex-wrap: wrap; }
+    #zip-ui .meta { font-size: 12px; opacity: .86; width: 100%; }
     #dos-wrap { padding: 12px 14px 14px; }
     #dos {
       width: 100%; height: 100%;
@@ -64,10 +69,18 @@
   <main>
     <div id="dropzone">
       <div id="help">
-        Drop a <code>.jsdos</code> bundle (recommended), or a bundle <code>.zip</code>.<br>
-        For simple single-file programs you can also drop <code>.exe/.com/.bat</code>.
+        Drop a <code>.jsdos</code> bundle (recommended), or a <code>.zip</code>.<br>
+        If the <code>.zip</code> is NOT a bundle, I’ll list <code>.EXE/.COM/.BAT</code> inside so you can choose what to run.
       </div>
-      <button id="fullscreen" class="btn" type="button">Fullscreen</button>
+
+      <div id="zip-ui">
+        <div class="meta" id="zip-meta"></div>
+        <select id="zip-entry"></select>
+        <button id="zip-run" class="btn" type="button">Run selected</button>
+        <button id="fullscreen" class="btn" type="button">Fullscreen</button>
+      </div>
+
+      <button id="fullscreen2" class="btn" type="button">Fullscreen</button>
     </div>
 
     <div id="dos-wrap">
@@ -76,6 +89,8 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/js-dos@8.3.20/dist/js-dos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
   <script>
     // js-dos needs to know where its emulator assets (wasm/js) live:
     const JSDOS_PATH_PREFIX = "https://cdn.jsdelivr.net/npm/js-dos@8.3.20/dist/";
@@ -85,13 +100,28 @@
     const elStatus = document.getElementById("status");
     const elDos = document.getElementById("dos");
     const elDrop = document.getElementById("dropzone");
+
+    const elZipUI = document.getElementById("zip-ui");
+    const elZipMeta = document.getElementById("zip-meta");
+    const elZipEntry = document.getElementById("zip-entry");
+    const elZipRun = document.getElementById("zip-run");
+
     const elFs = document.getElementById("fullscreen");
+    const elFs2 = document.getElementById("fullscreen2");
 
     let player = null;          // DosProps returned by Dos(...)
     let currentObjectUrl = null;
 
-    function setStatus(msg) {
-      elStatus.textContent = msg;
+    // For non-bundle ZIP mode
+    let pendingZip = null;      // JSZip instance
+    let pendingZipName = null;  // file name
+    let pendingZipExecs = [];   // list of runnable entries
+
+    function setStatus(msg) { elStatus.textContent = msg; }
+
+    function showZipUI(show) {
+      elZipUI.style.display = show ? "flex" : "none";
+      elFs2.style.display = show ? "none" : "inline-block";
     }
 
     function cleanup() {
@@ -103,25 +133,58 @@
         currentObjectUrl = null;
       }
 
+      // Clear pending zip state
+      pendingZip = null;
+      pendingZipName = null;
+      pendingZipExecs = [];
+      elZipEntry.innerHTML = "";
+      elZipMeta.textContent = "";
+      showZipUI(false);
+
       // wipe the container (js-dos injects DOM)
       elDos.innerHTML = "";
     }
 
-    function to83(name) {
-      // Create a DOS-ish 8.3 filename for safer launching (and uppercase it).
-      const parts = name.split(".");
-      const ext = (parts.length > 1 ? parts.pop() : "").toUpperCase().replace(/[^A-Z0-9]/g, "");
-      const base = parts.join(".").toUpperCase().replace(/[^A-Z0-9]/g, "");
-      const base83 = (base || "PROG").slice(0, 8);
-      const ext3 = ext.slice(0, 3);
-      return ext3 ? `${base83}.${ext3}` : base83;
+    function normalizeZipPath(p) {
+      // Convert "\" -> "/", remove leading "/", and block path traversal.
+      let s = (p || "").replace(/\\/g, "/");
+      while (s.startsWith("/")) s = s.slice(1);
+      // Remove any .. segments
+      const parts = [];
+      for (const part of s.split("/")) {
+        if (!part || part === ".") continue;
+        if (part === "..") continue;
+        parts.push(part);
+      }
+      return parts.join("/");
+    }
+
+    function toDosCdPath(dir) {
+      // For DOS commands, use backslashes.
+      return (dir || "").replace(/\//g, "\\");
+    }
+
+    function splitDirFile(path) {
+      const norm = normalizeZipPath(path);
+      const idx = norm.lastIndexOf("/");
+      if (idx === -1) return { dir: "", file: norm };
+      return { dir: norm.slice(0, idx), file: norm.slice(idx + 1) };
+    }
+
+    function isExecutable(name) {
+      const lower = (name || "").toLowerCase();
+      return lower.endsWith(".exe") || lower.endsWith(".com") || lower.endsWith(".bat");
+    }
+
+    function isBundleZip(zip) {
+      // js-dos bundle: contains ".jsdos/dosbox.conf"
+      return !!zip.file(".jsdos/dosbox.conf");
     }
 
     function startBundle(file) {
       cleanup();
       currentObjectUrl = URL.createObjectURL(file);
 
-      // Start js-dos with a bundle URL (blob URL is fine)
       player = Dos(elDos, {
         url: currentObjectUrl,
         pathPrefix: JSDOS_PATH_PREFIX,
@@ -135,11 +198,9 @@
 
     async function startSingleFile(file) {
       cleanup();
-
-      const safeName = to83(file.name);
+      const safeName = (file.name || "PROG.EXE").toUpperCase().replace(/[^A-Z0-9.]/g, "").slice(0, 12);
       const bytes = new Uint8Array(await file.arrayBuffer());
 
-      // Put program into GAME/ and run it via autoexec.
       const dosboxConf = `
 [autoexec]
 @echo off
@@ -163,22 +224,146 @@ ${safeName}
       setStatus(`Loaded program: ${file.name} (as ${safeName})`);
     }
 
-    function handleFile(file) {
+    async function prepareNonBundleZip(zipFile) {
+      cleanup();
+      setStatus(`Reading ZIP: ${zipFile.name} ...`);
+
+      const zipData = await zipFile.arrayBuffer();
+      const zip = await JSZip.loadAsync(zipData);
+
+      // Bundle zip? Run it directly (as-is).
+      if (isBundleZip(zip)) {
+        setStatus("Detected js-dos bundle ZIP. Starting...");
+        startBundle(zipFile);
+        return;
+      }
+
+      // Non-bundle ZIP: list executables.
+      const execs = [];
+      zip.forEach((relativePath, entry) => {
+        if (entry.dir) return;
+        const p = normalizeZipPath(relativePath);
+        // skip hidden bundle dir if present but incomplete
+        if (p.toLowerCase().startsWith(".jsdos/")) return;
+        if (isExecutable(p)) execs.push(p);
+      });
+
+      execs.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+
+      pendingZip = zip;
+      pendingZipName = zipFile.name;
+      pendingZipExecs = execs;
+
+      if (execs.length === 0) {
+        showZipUI(false);
+        setStatus("ZIP loaded, but no .EXE/.COM/.BAT found inside.");
+        return;
+      }
+
+      // Populate dropdown
+      elZipEntry.innerHTML = "";
+      for (const p of execs) {
+        const opt = document.createElement("option");
+        opt.value = p;
+        opt.textContent = p;
+        elZipEntry.appendChild(opt);
+      }
+
+      elZipMeta.textContent = `Non-bundle ZIP detected (${zipFile.name}). Found ${execs.length} runnable file(s).`;
+      showZipUI(true);
+
+      setStatus(execs.length === 1
+        ? "Found one runnable file in ZIP. Click “Run selected” (or change selection)."
+        : "Choose an executable from the ZIP, then click “Run selected”."
+      );
+
+      // Convenience: if only one entry, preselect it (already) and allow Enter
+      elZipEntry.focus();
+    }
+
+    async function startNonBundleZip(selectedPath) {
+      if (!pendingZip) return;
+      const chosen = selectedPath || elZipEntry.value;
+      if (!chosen) return;
+
+      // Build initFs by extracting *all files* from the zip into GAME/
+      const zip = pendingZip;
+      const total = Object.keys(zip.files).length;
+      let i = 0;
+
+      setStatus(`Extracting ZIP into DOS filesystem... (0/${total})`);
+
+      const initFs = [];
+      for (const [relativePath, entry] of Object.entries(zip.files)) {
+        i++;
+        if (entry.dir) continue;
+
+        const norm = normalizeZipPath(relativePath);
+        if (!norm) continue;
+
+        // Optional: skip macOS metadata
+        if (norm.startsWith("__MACOSX/")) continue;
+        if (norm.endsWith(".DS_Store")) continue;
+
+        const bytes = await entry.async("uint8array");
+        initFs.push({ path: `GAME/${norm}`, contents: bytes });
+
+        if (i % 25 === 0) setStatus(`Extracting ZIP into DOS filesystem... (${i}/${total})`);
+      }
+
+      // Compute DOS commands to cd into the executable's directory and run it
+      const { dir, file } = splitDirFile(chosen);
+      const cdDir = dir ? `cd ${toDosCdPath(dir)}` : "";
+      const runCmd = file;
+
+      const dosboxConf = `
+[autoexec]
+@echo off
+mount c .
+c:
+cd GAME
+${cdDir}
+${runCmd}
+      `.trim();
+
+      // Now start the emulator with initFs
+      // (Note: cleanup clears pendingZip state, so keep local vars above)
+      const zipName = pendingZipName;
+      cleanup(); // clears UI + stops previous player
+
+      player = Dos(elDos, {
+        pathPrefix: JSDOS_PATH_PREFIX,
+        autoStart: true,
+        noNetworking: true,
+        noCloud: true,
+        dosboxConf,
+        initFs,
+      });
+
+      setStatus(`Mounted ZIP (${zipName}) -> C:\\GAME and ran: ${chosen}`);
+    }
+
+    async function handleFile(file) {
       if (!file) return;
 
       const lower = file.name.toLowerCase();
-      if (lower.endsWith(".jsdos") || lower.endsWith(".zip")) {
-        // This will work if the file is a proper js-dos bundle zip.
+
+      if (lower.endsWith(".jsdos")) {
         startBundle(file);
         return;
       }
 
-      if (lower.endsWith(".exe") || lower.endsWith(".com") || lower.endsWith(".bat")) {
-        startSingleFile(file);
+      if (lower.endsWith(".zip")) {
+        await prepareNonBundleZip(file);
         return;
       }
 
-      setStatus("Unsupported file type. Use .jsdos/.zip (bundle) or .exe/.com/.bat (single file).");
+      if (lower.endsWith(".exe") || lower.endsWith(".com") || lower.endsWith(".bat")) {
+        await startSingleFile(file);
+        return;
+      }
+
+      setStatus("Unsupported file type. Use .jsdos, .zip, or .exe/.com/.bat.");
     }
 
     // File picker
@@ -204,6 +389,22 @@ ${safeName}
       handleFile(f);
     });
 
+    // Run selected from ZIP UI
+    elZipRun.addEventListener("click", async () => {
+      try {
+        await startNonBundleZip(elZipEntry.value);
+      } catch (err) {
+        console.error(err);
+        setStatus("Failed to run ZIP. Open devtools console for details.");
+      }
+    });
+    elZipEntry.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        await startNonBundleZip(elZipEntry.value);
+      }
+    });
+
     // Stop
     elStop.addEventListener("click", () => {
       cleanup();
@@ -211,9 +412,11 @@ ${safeName}
     });
 
     // Fullscreen
-    elFs.addEventListener("click", () => {
+    function goFullscreen() {
       try { player?.setFullScreen?.(true); } catch (_) {}
-    });
+    }
+    elFs.addEventListener("click", goFullscreen);
+    elFs2.addEventListener("click", goFullscreen);
 
     // Cleanup on navigation away
     window.addEventListener("beforeunload", cleanup);
