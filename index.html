@@ -2,102 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MS-DOS (js-dos) on GitHub Pages</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TES: Arena (Browser)</title>
 
-  <!-- js-dos CDN (v8) -->
+  <!-- OPTIONAL: uncomment if you hit SharedArrayBuffer / crossOriginIsolated issues -->
+  <!-- <script src="/coi-serviceworker.js"></script> -->
+
+  <!-- js-dos (DOSBox in the browser) -->
   <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
   <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
-
-  <style>
-    html, body { height: 100%; margin: 0; background: #0b0b0b; color: #eaeaea; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    .wrap { display: grid; grid-template-rows: auto 1fr; height: 100%; }
-    header { padding: 12px 14px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.12); }
-    header > * { margin: 0; }
-    .hint { opacity: 0.85; font-size: 13px; }
-    .btn { cursor: pointer; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); color: inherit; padding: 8px 10px; border-radius: 10px; }
-    .btn:hover { background: rgba(255,255,255,0.1); }
-    input[type=file] { max-width: 320px; }
-    #dos { width: 100%; height: 100%; }
-    .grow { flex: 1 1 auto; }
-  </style>
 </head>
-<body>
-  <div class="wrap">
-    <header>
-      <strong>js-dos runner</strong>
-      <span class="hint">Click inside the emulator to capture keyboard. ESC usually releases mouse.</span>
-      <span class="grow"></span>
 
-      <button class="btn" id="runBundled">Run bundled bundle.jsdos</button>
-      <label class="btn">
-        Run local .jsdos
-        <input id="file" type="file" accept=".jsdos" style="display:none" />
-      </label>
-      <button class="btn" id="stop">Stop</button>
-    </header>
-
-    <div id="dos"></div>
-  </div>
+<body style="margin:0; background:#111;">
+  <div id="dos" style="width:100vw; height:100vh;"></div>
 
   <script>
-    const container = document.getElementById('dos');
-    const bundledUrl = new URL('./bundle.jsdos', window.location.href).toString();
-
-    let props = null;
-
-    function clearContainer() {
-      // js-dos injects DOM; easiest is to recreate the container
-      const parent = container.parentNode;
-      const fresh = document.createElement('div');
-      fresh.id = 'dos';
-      fresh.style.width = '100%';
-      fresh.style.height = '100%';
-      parent.replaceChild(fresh, container);
-      return fresh;
-    }
-
-    async function stopEmu() {
-      try {
-        if (props && typeof props.stop === 'function') await props.stop();
-      } catch (e) {
-        console.warn('Stop error:', e);
-      } finally {
-        props = null;
-      }
-    }
-
-    async function run(url) {
-      await stopEmu();
-      const fresh = clearContainer();
-
-      // GitHub Pages doesn’t let you set custom COOP/COEP headers.
-      // Setting workerThread:false avoids common SharedArrayBuffer/crossOriginIsolated issues.
-      props = Dos(fresh, {
-        url,
-        autoStart: true,
-        workerThread: false,
-        // optional: start fullscreen UI toggle off
-        fullScreen: false,
-      });
-    }
-
-    // Buttons
-    document.getElementById('runBundled').addEventListener('click', () => run(bundledUrl));
-    document.getElementById('stop').addEventListener('click', stopEmu);
-
-    // Local file runner (does NOT upload to GitHub; it runs from your browser)
-    document.getElementById('file').addEventListener('change', (ev) => {
-      const f = ev.target.files && ev.target.files[0];
-      if (!f) return;
-      const blobUrl = URL.createObjectURL(f);
-      run(blobUrl);
-    });
-
-    // Auto-run bundled game if it exists
-    run(bundledUrl).catch(err => {
-      console.error(err);
-      alert('Failed to load ./bundle.jsdos. Make sure bundle.jsdos exists in /dos/.');
+    // Loads your local bundle at /arena/arena.jsdos
+    Dos(document.getElementById("dos"), {
+      url: "./arena.jsdos",
+      noSocialLinks: true,
+      style: "default"
     });
   </script>
 </body>
