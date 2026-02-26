@@ -1,57 +1,34 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>drakdodare DOS Arcade</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DOOM (Shareware) - drakdodare</title>
+  <link rel="stylesheet" href="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.css" />
+  <style>
+    body { margin:0; font-family: system-ui, Arial; background:#0b0e14; color:#e5e7eb; }
+    header { display:flex; gap:12px; align-items:center; padding:10px 12px; border-bottom:1px solid #1f2937; }
+    #jsdos { height: calc(100vh - 52px); }
+    .btn { padding:8px 10px; border:1px solid #1f2937; background:#111827; color:#e5e7eb; border-radius:10px; cursor:pointer; }
+    .btn:disabled { opacity:.5; cursor:not-allowed; }
+    label.btn input { display:none; }
+    .muted { color:#9ca3af; font-size:12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <button id="restart" class="btn">Restart DOOM</button>
+    <label class="btn">
+      Run local .jsdos…
+      <input id="file" type="file" accept=".jsdos,.zip,application/zip" />
+    </label>
+    <button id="stop" class="btn" disabled>Stop</button>
+    <div class="muted">Controls: arrows to move, Ctrl = fire, Space = use, Alt = strafe</div>
+  </header>
 
-    <!-- js-dos player UI styles (v7) -->
-    <link rel="stylesheet" href="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.css" />
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand__title">DOS Arcade</div>
-        <div class="brand__sub">drakdodare.github.io</div>
-      </div>
+  <div id="jsdos"></div>
 
-      <div class="actions">
-        <label class="filebtn">
-          <input id="fileInput" type="file" accept=".jsdos,.zip,application/zip" />
-          Run local bundle…
-        </label>
-
-        <button id="stopBtn" class="btn" disabled>Stop</button>
-      </div>
-    </header>
-
-    <main class="layout">
-      <aside class="sidebar">
-        <div class="sidebar__head">
-          <div class="sidebar__title">Games</div>
-          <div id="status" class="status">Loading manifest…</div>
-        </div>
-
-        <div id="gameList" class="gamelist"></div>
-
-        <div class="hint">
-          <div class="hint__title">Tips</div>
-          <ul>
-            <li>Drop a <code>.jsdos</code> file anywhere to run it.</li>
-            <li>Hosted bundles live in <code>/games</code> and are listed in <code>manifest.json</code>.</li>
-          </ul>
-        </div>
-      </aside>
-
-      <section class="stage">
-        <!-- js-dos mounts into this div -->
-        <div id="jsdos" class="jsdos"></div>
-      </section>
-    </main>
-
-    <!-- js-dos library (v7) -->
-    <script src="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.js"></script>
-    <script src="./app.js"></script>
-  </body>
+  <script src="https://js-dos.com/v7/build/releases/latest/js-dos/js-dos.js"></script>
+  <script src="./app.js"></script>
+</body>
 </html>
