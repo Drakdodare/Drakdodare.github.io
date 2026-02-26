@@ -1,70 +1,83 @@
 <!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>DOS Games (js-dos) – drakdodare.github.io</title>
 
-  <main class="layout">
-    <section class="panel">
-      <h2>CONTROL DECK</h2>
+    <!-- js-dos (official CDN, always latest v8) -->
+    <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css" />
+    <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
 
-      <label class="field">
-        <span class="field-label">Game</span>
-        <select id="gameSelect" class="select"></select>
-      </label>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        background: #0b0b0b;
+        color: #eaeaea;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      }
 
-      <div class="buttons">
-        <button id="btnBoot" class="btn btn-primary" type="button">BOOT</button>
-        <button id="btnEject" class="btn" type="button" disabled>EJECT</button>
-        <button id="btnFullscreen" class="btn" type="button" disabled>FULLSCREEN</button>
-        <button id="btnMouse" class="btn" type="button" disabled>MOUSE LOCK</button>
-      </div>
+      #topbar {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 10px 12px;
+        border-bottom: 1px solid #222;
+        background: #111;
+      }
 
-      <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Drop .jsdos bundle here">
-        <div class="dz-title">DROP .JSDOS HERE</div>
-        <div class="dz-sub">or click to pick a file</div>
-        <input id="fileInput" class="hidden" type="file" accept=".jsdos" />
-      </div>
+      #topbar select, #topbar button {
+        background: #1a1a1a;
+        color: #eaeaea;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 14px;
+        cursor: pointer;
+      }
 
-      <div class="status">
-        <div class="status-label">STATUS</div>
-        <div id="statusText" class="status-text">Idle. Choose a game and hit BOOT.</div>
-      </div>
+      #topbar button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
 
-      <div class="tips">
-        <div class="tips-title">NOTES</div>
-        <ul>
-          <li>Use <b>shareware/freeware</b> bundles or your own legally‑owned game files.</li>
-          <li>GitHub Pages has file-size limits; keep bundles reasonable.</li>
-          <li>If a game needs mouse capture, toggle <b>MOUSE LOCK</b>.</li>
-        </ul>
-      </div>
+      #status {
+        margin-left: auto;
+        opacity: 0.85;
+        font-size: 13px;
+      }
 
-      <footer class="footer">
-        <div class="marquee" aria-hidden="true">
-          <span>WELCOME TO DR4KD0S • INSERT DISK • PRESS ANY KEY • RETRO WAVE ENABLED • </span>
-        </div>
-      </footer>
-    </section>
+      #dos {
+        height: calc(100% - 52px);
+        width: 100%;
+      }
 
-    <section class="stage">
-      <div class="monitor">
-        <div class="monitor-top">
-          <div class="monitor-badge">CRT‑9000</div>
-          <div class="monitor-led" aria-hidden="true"></div>
-        </div>
+      /* Optional: if you ever enable "softFullscreen", js-dos uses this class */
+      .jsdos-fullscreen-workaround {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+      }
+    </style>
+  </head>
 
-        <div class="crt">
-          <div id="dos" class="dos"></div>
-          <div class="crt-overlay scanlines" aria-hidden="true"></div>
-          <div class="crt-overlay vignette" aria-hidden="true"></div>
-          <div class="crt-overlay glare" aria-hidden="true"></div>
-        </div>
+  <body>
+    <div id="topbar">
+      <label for="gameSelect">Game:</label>
+      <select id="gameSelect"></select>
 
-        <div class="monitor-bottom">
-          <div class="kbdhint">Tip: click inside the screen to capture keyboard</div>
-          <div class="sig">v1.0 • synthwave build</div>
-        </div>
-      </div>
-    </section>
-  </main>
+      <button id="btnStart">Start</button>
+      <button id="btnStop" disabled>Stop</button>
+      <button id="btnFullscreen" disabled>Fullscreen</button>
 
-  <script src="./assets/app.js"></script>
-</body>
+      <div id="status">Ready</div>
+    </div>
+
+    <div id="dos"></div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
 </html>
