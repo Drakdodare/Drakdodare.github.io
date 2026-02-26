@@ -1,28 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TES: Arena (Browser)</title>
-
-  <!-- OPTIONAL: uncomment if you hit SharedArrayBuffer / crossOriginIsolated issues -->
-  <!-- <script src="/coi-serviceworker.js"></script> -->
-
-  <!-- js-dos (DOSBox in the browser) -->
-  <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
-  <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+            background: black; /* optional */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
 </head>
-
-<body style="margin:0; background:#111;">
-  <div id="dos" style="width:100vw; height:100vh;"></div>
-
-  <script>
-    // Loads your local bundle at /arena/arena.jsdos
-    Dos(document.getElementById("dos"), {
-      url: "./arena.jsdos",
-      noSocialLinks: true,
-      style: "default"
-    });
-  </script>
+<body>
+    <img src="https://i.postimg.cc/kXhDwbFh/Gnome.webp" alt="Gnome">
 </body>
 </html>
